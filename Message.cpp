@@ -3,17 +3,12 @@
 using namespace std;
 
 
-// Message::Message() {}
 
-// Message::~Message() {}
+Message::Type Message::getType() const {
 
+    return type;
 
-// Message* Message::clone() {
-
-//     return new Message(this);
-
-// }
-
+}
 
 
 ConnectMsg::ConnectMsg(const string& user, const string& pswd)
@@ -25,15 +20,43 @@ ConnectMsg::ConnectMsg(const string& user, const string& pswd)
 }
 
 
-
-
 ConnectMsg* ConnectMsg::clone() {
 
     return new ConnectMsg(*this);
 
 }
 
-// Message* ConnectMsg::clone() {}
+
+ConnAckMsg* ConnAckMsg::clone() {
+
+    return new ConnAckMsg(*this);
+
+}
 
 
+PublishMsg* PublishMsg::clone() {
 
+    return new PublishMsg(*this);
+
+}
+
+
+SubscribeMsg* SubscribeMsg::clone() {
+
+    return new SubscribeMsg(*this);
+
+}
+
+
+UnsubscribeMsg* UnsubscribeMsg::clone() {
+
+    return new UnsubscribeMsg(*this);
+
+}
+
+
+DisconnectMsg* DisconnectMsg::clone() {
+
+    return new DisconnectMsg(*this);
+
+}

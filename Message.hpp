@@ -31,6 +31,7 @@ protected:
 
 
 
+
 class ConnectMsg : public Message {
 
 public:
@@ -51,11 +52,16 @@ private:
 
 
 
+
+
 class ConnAckMsg : public Message {
 
 public:
 
     enum class Status { CONNECTION_OK, LOGIN_ERROR };
+
+    virtual ConnAckMsg* clone() override;
+    
 
 private:
 
@@ -68,6 +74,11 @@ private:
 
 class PublishMsg : public Message {
 
+public:
+
+    virtual PublishMsg* clone() override;
+
+    
 private:
 
     TopicName topic;
@@ -81,11 +92,34 @@ private:
 
 
 
-class SubscribeMsg : public Message {};
+class SubscribeMsg : public Message {
 
-class UnsubscribeMsg : public Message {};
+public:
+    
+    virtual SubscribeMsg* clone() override;
 
-class DisconnectMsg : public Message {};
+};
+
+
+
+class UnsubscribeMsg : public Message {
+
+public:
+    
+    virtual UnsubscribeMsg* clone() override;
+
+};
+
+
+
+class DisconnectMsg : public Message {
+
+public:
+    
+    virtual DisconnectMsg* clone() override;
+
+};
+
 
 
 
