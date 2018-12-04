@@ -36,7 +36,7 @@ void SimPublisher::runSim() {
 
     for( int i = 0 ; i < 10 ; ++i ) {
 
-	int sleep = 1000 + rand() / (RAND_MAX / 1001 + 1);
+	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
 	
     	this_thread::sleep_for( chrono::milliseconds(sleep) );
 

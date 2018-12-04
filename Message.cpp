@@ -16,7 +16,7 @@ ConnectMsg::ConnectMsg(const string& user, const string& pswd)
 }
 
 
-ConnectMsg* ConnectMsg::clone() {   return new ConnectMsg(*this);  }
+ConnectMsg* ConnectMsg::clone() const {   return new ConnectMsg(*this);  }
 
 const string& ConnectMsg::user() { return username; };
 
@@ -26,7 +26,7 @@ const string& ConnectMsg::pswd() { return password; };
 
 ConnAckMsg::ConnAckMsg() { type = Type::CONNACK; }
 
-ConnAckMsg* ConnAckMsg::clone() {  return new ConnAckMsg(*this);  }
+ConnAckMsg* ConnAckMsg::clone() const {  return new ConnAckMsg(*this);  }
 
 
 
@@ -37,22 +37,22 @@ PublishMsg::PublishMsg(const TopicName& tn, const TopicValue& tv, const bool r)
 
 }
 
-PublishMsg* PublishMsg::clone() {  return new PublishMsg(*this);  }
+PublishMsg* PublishMsg::clone() const {  return new PublishMsg(*this);  }
 
 
 
 SubscribeMsg::SubscribeMsg() { type = Type::SUBSCRIBE; }
 
-SubscribeMsg* SubscribeMsg::clone() {  return new SubscribeMsg(*this);  }
+SubscribeMsg* SubscribeMsg::clone() const {  return new SubscribeMsg(*this);  }
 
 
 
 UnsubscribeMsg::UnsubscribeMsg() { type = Type::UNSUBSCRIBE; }
 
-UnsubscribeMsg* UnsubscribeMsg::clone() {  return new UnsubscribeMsg(*this);  }
+UnsubscribeMsg* UnsubscribeMsg::clone() const {  return new UnsubscribeMsg(*this);  }
 
 
 
 DisconnectMsg::DisconnectMsg() { type = Type::DISCONNECT; }
 
-DisconnectMsg* DisconnectMsg::clone() {  return new DisconnectMsg(*this);  }
+DisconnectMsg* DisconnectMsg::clone() const {  return new DisconnectMsg(*this);  }

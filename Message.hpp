@@ -17,7 +17,7 @@ public:
     Type getType() const;
 
     
-    virtual Message *clone() = 0;
+    virtual Message *clone() const = 0;
 
     virtual ~Message() = default;
 
@@ -38,7 +38,7 @@ public:
 
     ConnectMsg(const std::string& user, const std::string& pswd);
 
-    virtual ConnectMsg* clone() override;
+    virtual ConnectMsg* clone() const;
 
     const std::string& user();
 
@@ -66,7 +66,7 @@ public:
 
     enum class Status { CONNECTION_OK, LOGIN_ERROR };
 
-    virtual ConnAckMsg* clone() override;
+    virtual ConnAckMsg* clone() const;
     
 
 private:
@@ -84,7 +84,7 @@ public:
 
     PublishMsg(const TopicName& tn, const TopicValue& tv, const bool r = true);
     
-    virtual PublishMsg* clone() override;
+    virtual PublishMsg* clone() const;
 
     
 private:
@@ -106,7 +106,7 @@ public:
 
     SubscribeMsg();
     
-    virtual SubscribeMsg* clone() override;
+    virtual SubscribeMsg* clone() const;
 
 };
 
@@ -118,7 +118,7 @@ public:
 
     UnsubscribeMsg();
     
-    virtual UnsubscribeMsg* clone() override;
+    virtual UnsubscribeMsg* clone() const;
 
 };
 
@@ -130,7 +130,7 @@ public:
 
     DisconnectMsg();
     
-    virtual DisconnectMsg* clone() override;
+    virtual DisconnectMsg* clone() const;
 
 };
 
