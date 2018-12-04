@@ -4,11 +4,7 @@ using namespace std;
 
 
 
-Message::Type Message::getType() const {
-
-    return type;
-
-}
+Message::Type Message::getType() const {  return type; }
 
 
 ConnectMsg::ConnectMsg(const string& user, const string& pswd)
@@ -20,43 +16,43 @@ ConnectMsg::ConnectMsg(const string& user, const string& pswd)
 }
 
 
-ConnectMsg* ConnectMsg::clone() {
+ConnectMsg* ConnectMsg::clone() {   return new ConnectMsg(*this);  }
 
-    return new ConnectMsg(*this);
+const string& ConnectMsg::user() { return username; };
 
-}
-
-
-ConnAckMsg* ConnAckMsg::clone() {
-
-    return new ConnAckMsg(*this);
-
-}
+const string& ConnectMsg::pswd() { return password; };
 
 
-PublishMsg* PublishMsg::clone() {
 
-    return new PublishMsg(*this);
+ConnAckMsg::ConnAckMsg() { type = Type::CONNACK; }
 
-}
+ConnAckMsg* ConnAckMsg::clone() {  return new ConnAckMsg(*this);  }
 
 
-SubscribeMsg* SubscribeMsg::clone() {
 
-    return new SubscribeMsg(*this);
+PublishMsg::PublishMsg(const TopicName& tn, const TopicValue& tv, const bool r)
+    : topic(tn), value(tv), retain(r)  {
+
+    type = Type::PUBLISH;
 
 }
 
-
-UnsubscribeMsg* UnsubscribeMsg::clone() {
-
-    return new UnsubscribeMsg(*this);
-
-}
+PublishMsg* PublishMsg::clone() {  return new PublishMsg(*this);  }
 
 
-DisconnectMsg* DisconnectMsg::clone() {
 
-    return new DisconnectMsg(*this);
+SubscribeMsg::SubscribeMsg() { type = Type::SUBSCRIBE; }
 
-}
+SubscribeMsg* SubscribeMsg::clone() {  return new SubscribeMsg(*this);  }
+
+
+
+UnsubscribeMsg::UnsubscribeMsg() { type = Type::UNSUBSCRIBE; }
+
+UnsubscribeMsg* UnsubscribeMsg::clone() {  return new UnsubscribeMsg(*this);  }
+
+
+
+DisconnectMsg::DisconnectMsg() { type = Type::DISCONNECT; }
+
+DisconnectMsg* DisconnectMsg::clone() {  return new DisconnectMsg(*this);  }

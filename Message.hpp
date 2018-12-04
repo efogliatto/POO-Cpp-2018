@@ -39,6 +39,10 @@ public:
     ConnectMsg(const std::string& user, const std::string& pswd);
 
     virtual ConnectMsg* clone() override;
+
+    const std::string& user();
+
+    const std::string& pswd();    
     
     
 private:
@@ -58,6 +62,8 @@ class ConnAckMsg : public Message {
 
 public:
 
+    ConnAckMsg();
+
     enum class Status { CONNECTION_OK, LOGIN_ERROR };
 
     virtual ConnAckMsg* clone() override;
@@ -76,6 +82,8 @@ class PublishMsg : public Message {
 
 public:
 
+    PublishMsg(const TopicName& tn, const TopicValue& tv, const bool r = true);
+    
     virtual PublishMsg* clone() override;
 
     
@@ -95,6 +103,8 @@ private:
 class SubscribeMsg : public Message {
 
 public:
+
+    SubscribeMsg();
     
     virtual SubscribeMsg* clone() override;
 
@@ -105,6 +115,8 @@ public:
 class UnsubscribeMsg : public Message {
 
 public:
+
+    UnsubscribeMsg();
     
     virtual UnsubscribeMsg* clone() override;
 
@@ -115,6 +127,8 @@ public:
 class DisconnectMsg : public Message {
 
 public:
+
+    DisconnectMsg();
     
     virtual DisconnectMsg* clone() override;
 

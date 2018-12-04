@@ -1,7 +1,6 @@
 #ifndef SIMCLIENT_HPP
 #define SIMCLIENT_HPP
 
-
 #include "ClientOpsIF.hpp"
 
 #include "Broker.hpp"
@@ -9,11 +8,11 @@
 #include <thread>
 
 
-class SimCLient : public ClientOpsIF {
+class SimClient : public ClientOpsIF {
 
-private:
+protected:
 
-    thread simth;
+    std::thread simth;
 
     Broker& broker;
 

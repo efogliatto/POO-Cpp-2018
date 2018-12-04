@@ -11,14 +11,19 @@
 
 #include <thread>
 
+#include <vector>
+
+#include <deque>
+
+
 
 class Client : public BrokerOpsIF {
 
 private:
 
-    thread th;
+    std::thread th;
 
-    ClientOpsIF *cif;
+    ClientOpsIF* cif;
 
     std::vector<Subscription*> subscriptions;
 
@@ -31,7 +36,7 @@ public:
 
     Client(ClientOpsIF* c);
 
-    void sendMsg( const Message& m );
+    void sendMsg( const Message& msg );
 
 };
 

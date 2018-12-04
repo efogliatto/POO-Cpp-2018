@@ -3,9 +3,9 @@ CXX=g++
 RM=rm -f
 CPPFLAGS=-Wall -std=c++11
 LDFLAGS=
-LDLIBS=-lm
+LDLIBS=-lm -lpthread
 
-SRCS=MQTTSim.cpp Message.cpp
+SRCS=MQTTSim.cpp Message.cpp SimClient.cpp SimPublisher.cpp Broker.cpp Client.cpp
 
 OBJS=$(subst .cpp,.o,$(SRCS))
 

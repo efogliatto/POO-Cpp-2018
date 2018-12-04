@@ -3,6 +3,7 @@
 
 #include "SimClient.hpp"
 
+
 class SimPublisher : public SimClient {
 
 private:
@@ -12,6 +13,8 @@ private:
 
 public:
 
+    SimPublisher(Broker& b);
+    
     void recvMsg(const Message& m);
 
 };

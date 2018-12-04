@@ -1,6 +1,9 @@
 #ifndef BROKEROPSIF_HPP
 #define BROKEROPSIF_HPP
 
+#include "Message.hpp"
+
+
 class BrokerOpsIF {
 
 public:
