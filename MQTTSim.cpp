@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "SimPublisher.hpp"
+#include "Queue.hpp"
 
 
 using namespace std;
@@ -8,15 +8,7 @@ using namespace std;
 int main( int argc, char **argv ) {
 
 
-    // Broker
-    
-    Broker broker;
-
-
-    // Ejemplo de publisher
-    
-    SimPublisher pub(broker);
-
-    pub.start();
+    Queue<int,2> q;
+	
     
 }
