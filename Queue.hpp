@@ -13,6 +13,9 @@
 
 #include <thread>
 
+#include <condition_variable>
+
+
 
 template<class T, size_t N>
 class Queue {
@@ -34,6 +37,9 @@ private:
     // Variables para sincronizacion
 
     mutable std::mutex m;
+
+    std::condition_variable data_cond;
+
 
 
 public:
@@ -131,24 +137,17 @@ const bool Queue<T,N>::full() const {
 template<class T, size_t N>
 void Queue<T,N>::put(const T& val) {
 
-    std::lock_guard<std::mutex> lg(m);
+    
+    std::unique_lock<std::mutex> lg(m);
 
-    if( !full() ) {
+    data_cond.wait(lg,[this]{return !full();});
 
-	if(front == -1)
-	    front = 0;
+    if(front == -1)
+	front = 0;
 	    
-	rear = (rear + 1) % N;
+    rear = (rear + 1) % N;
 
-	data[rear] = val;
-
-    }
-
-    else {
-
-	std::cout << "full. Unable to put " << val << std::endl;
-
-    }
+    data[rear] = val;	
 
 }
 
@@ -178,11 +177,13 @@ void Queue<T,N>::get(T* val) {
 		
 	}
 
+	data_cond.notify_one();
+
     }
 
     else {
 
-	std::cout << "empty" << std::endl;
+	val = new T;
 
     }
 	

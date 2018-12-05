@@ -2,33 +2,45 @@
 
 #include "Queue.hpp"
 
+#include <chrono>
+
+#include <thread>
+
+#include <vector>
+
+using myqueue = Queue<int,2>;
+
 
 using namespace std;
 
 int main( int argc, char **argv ) {
 
 
-    Queue<int,2> q;
+    myqueue q;
 
-    thread t1( &Queue<int,2>::put, &q, 1 );
+    vector<thread> tvec;
 
-    thread t2( &Queue<int,2>::put, &q, 2 );
-
-    thread t3( &Queue<int,2>::put, &q, 3 );   
-
-    t1.join();
-
-    t2.join();
-
-    t3.join();
-
-
-    int a;
     
-    thread t4( &Queue<int,2>::get, &q, &a );
+    for( int i = 0 ; i < 10 ; ++i )	
+    	tvec.push_back( std::thread(&myqueue::put, &q, i) );
 
-    cout << a << endl;
 
-    t4.join();
+    while( !q.empty() ) {
+
+	int a;
+
+	this_thread::sleep_for(chrono::seconds(2));
+	cout << endl;
+	
+	thread t( &Queue<int,2>::get, &q, &a );
+
+	t.join();		
+	
+    }
+
+    
+    for( int i = 0 ; i < 10 ; ++i )
+	tvec[i].join();
+  
     
 }
