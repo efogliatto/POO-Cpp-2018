@@ -13,7 +13,10 @@
 
 #include <vector>
 
-#include <deque>
+#include "Queue.hpp"
+
+
+using myqueue = Queue<Message*, 10>;
 
 
 
@@ -29,7 +32,7 @@ private:
 
     std::vector<RetainedTopic*> topics;
 
-    std::deque<Message*> recvQueue;
+    myqueue recvQueue;
 
 
 public:

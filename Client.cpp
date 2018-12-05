@@ -1,6 +1,6 @@
 #include "Client.hpp"
 
-#include "iostream"
+#include <iostream>
 
 using namespace std;
 
@@ -14,7 +14,13 @@ Client::Client(ClientOpsIF* c) {
 
 
 void Client::sendMsg( const Message& msg ) {
-   
-    recvQueue.push_back( msg.clone() );    
+
+    
+    // Incorporacion a la cola de mensages
+    
+    thread t( &myqueue::put, &recvQueue, msg.clone() );
+    
+    t.join();
+    
     
 }

@@ -1,52 +1,51 @@
 #include <iostream>
 
-#include "Queue.hpp"
+#include "Broker.hpp"
 
-#include <chrono>
-
-#include <thread>
+#include "SimPublisher.hpp"
 
 #include <vector>
 
-using myqueue = Queue<int,2>;
 
+// using namespace std;
 
-using namespace std;
 
 int main( int argc, char **argv ) {
 
 
+    // Broker
 
+    Broker broker;
+
+
+    // Publisher threads
+
+    int npub = 1;
+
+    std::vector<SimPublisher*> publishers;
+
+    std::vector<std::thread> tpub;    
+
+    for( int i = 0 ; i < npub ; i++ )
+	publishers.push_back( new SimPublisher(broker) );
+
+    for( int i = 0 ; i < npub ; i++ )
+    	tpub.push_back( std::thread(&SimClient::start, publishers[i]) );
+
+
+
+
+
+    // Join publishers
+
+    for(auto &th : tpub)
+    	if(th.joinable())
+    	    th.join();
+    
+    
+
+
+    
   
     
 }
-
-
-
-// // Codigo para prueba de Queue
-
-// myqueue q;
-
-// vector<thread> tvec;
-
-    
-// for( int i = 0 ; i < 10 ; ++i )	
-//     tvec.push_back( std::thread(&myqueue::put, &q, i) );
-
-
-// while( !q.empty() ) {
-
-//     int a;
-
-//     this_thread::sleep_for(chrono::seconds(2));
-//     cout << endl;
-	
-//     thread t( &Queue<int,2>::get, &q, &a );
-
-//     t.join();		
-	
-// }
-
-    
-// for( int i = 0 ; i < 10 ; ++i )
-//     tvec[i].join();

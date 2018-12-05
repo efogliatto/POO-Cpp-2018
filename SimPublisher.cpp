@@ -34,13 +34,15 @@ void SimPublisher::runSim() {
     
     // Esperar connack
 
-    for( int i = 0 ; i < 10 ; ++i ) {
+    for( int i = 0 ; i < 5 ; ++i ) {
 
-	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
+    	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
 	
     	this_thread::sleep_for( chrono::milliseconds(sleep) );
 
     	PublishMsg m("Topico", "Valor");
+
+	cout << "Publishing" << endl;
 
     	brops->sendMsg(m);
 
