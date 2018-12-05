@@ -42,6 +42,16 @@ private:
 
 
 
+    // Deteccion de Queue vacia. Sin lock
+
+    const bool empty() const;
+
+
+    // Deteccion de Queue llena
+
+    const bool full() const;
+    
+
 public:
 
     // Constructor por defecto
@@ -56,12 +66,12 @@ public:
 
     // Deteccion de Queue vacia
 
-    const bool empty() const;
+    const bool isEmpty() const;
 
 
     // Deteccion de Queue llena
 
-    const bool full() const;
+    const bool isFull() const;
     
     
     // Insercion de elemento nuevo en el array
@@ -69,7 +79,7 @@ public:
     void put(const T& val);
 
 
-    // Lectura de elemento mas viejo
+    // Lectura de copia elemento mas viejo
 
     void get(T* val);
 
@@ -111,6 +121,18 @@ const bool Queue<T,N>::empty() const {
 }
 
 
+// Deteccion de Queue vacia
+
+template<class T, size_t N>
+const bool Queue<T,N>::isEmpty() const {
+
+    std::lock_guard<std::mutex> lg(m);
+
+    return empty();
+
+}
+
+
 // Deteccion de Queue llena
 
 template<class T, size_t N>
@@ -130,7 +152,20 @@ const bool Queue<T,N>::full() const {
 
 }
 
-    
+
+
+// Deteccion de Queue llena
+
+template<class T, size_t N>
+const bool Queue<T,N>::isFull() const {
+
+    std::lock_guard<std::mutex> lg(m);
+	
+    return full();
+
+}
+
+
     
 // Insercion de elemento nuevo en el array
 
