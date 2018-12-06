@@ -15,6 +15,8 @@
 
 #include <condition_variable>
 
+#include <iostream>
+
 
 
 template<class T, size_t N>
@@ -38,7 +40,9 @@ private:
 
     mutable std::mutex m;
 
-    std::condition_variable data_cond;
+    std::condition_variable full_cond;
+
+    std::condition_variable empty_cond;
 
 
 
@@ -175,14 +179,24 @@ void Queue<T,N>::put(const T& val) {
     
     std::unique_lock<std::mutex> lg(m);
 
-    data_cond.wait(lg,[this]{return !full();});
+    
+    // Espera por la variable de condicion full_cond (si esta llena la cola, vuelve a abrirse con Queue::get)
+    
+    full_cond.wait(lg,[this]{return !full();});
 
     if(front == -1)
 	front = 0;
 	    
     rear = (rear + 1) % N;
 
-    data[rear] = val;	
+    data[rear] = val;
+    std::cout << "Inserting value " << val << std::endl;
+
+    
+
+    // Notificar para habilitar lectura
+
+    empty_cond.notify_one();    
 
 }
 
@@ -192,35 +206,72 @@ void Queue<T,N>::put(const T& val) {
 template<class T, size_t N>
 void Queue<T,N>::get(T* val) {
 
-    std::lock_guard<std::mutex> lg(m);
+    // std::lock_guard<std::mutex> lg(m);
 
-    if( !empty() ) {
+    // if( !empty() ) {
 
-	*val = data[front];
+    // 	*val = data[front];
 
-	if(front == rear){
+    // 	if(front == rear){
 		
-	    front = -1;
+    // 	    front = -1;
 		
-	    rear = -1;
+    // 	    rear = -1;
 		
-	}
+    // 	}
 	    
-	else {
+    // 	else {
 		
-	    front = (front+1) % N;
+    // 	    front = (front+1) % N;
 		
-	}
+    // 	}
 
-	data_cond.notify_one();
+    // 	full_cond.notify_one();
 
+    // }
+
+    // else {
+
+    // 	val = new T;
+
+    // }
+
+
+
+    
+
+    std::unique_lock<std::mutex> lg(m);
+    
+
+    // Espera por la variable de condicion empty. Si la cola esta vacia, se habilita con un put
+
+    empty_cond.wait(lg,[this]{return !empty();});
+
+
+    *val = data[front];
+
+    if(front == rear){
+		
+	front = -1;
+		
+	rear = -1;
+		
     }
-
+	    
     else {
-
-	val = new T;
-
+		
+	front = (front+1) % N;
+		
     }
+
+
+    std::cout << "Extracting value " << *val << std::endl;
+
+    // Habilita la posicion de un nuevo elemento (por si la cola estaba llena)
+    
+    full_cond.notify_one();
+
+    
 	
 }
 

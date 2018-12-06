@@ -42,10 +42,5 @@ int main( int argc, char **argv ) {
     	if(th.joinable())
     	    th.join();
     
-    
-
-
-    
-  
-    
+        
 }
