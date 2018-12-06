@@ -4,7 +4,7 @@ using namespace std;
 
 
 
-Message::Type Message::getType() const {  return type; }
+const Message::Type Message::getType() const {  return type; }
 
 
 ConnectMsg::ConnectMsg(const string& user, const string& pswd)
@@ -39,11 +39,19 @@ PublishMsg::PublishMsg(const TopicName& tn, const TopicValue& tv, const bool r)
 
 PublishMsg* PublishMsg::clone() const {  return new PublishMsg(*this);  }
 
+const TopicName& PublishMsg::getTopic() const { return topic; }
+
+const TopicValue& PublishMsg::getValue() const { return value; }
+
+const bool& PublishMsg::isRetained() const { return retain; }
+
 
 
 SubscribeMsg::SubscribeMsg() { type = Type::SUBSCRIBE; }
 
 SubscribeMsg* SubscribeMsg::clone() const {  return new SubscribeMsg(*this);  }
+
+const TopicName& SubscribeMsg::getTopic() const { return topic; }
 
 
 
@@ -51,6 +59,7 @@ UnsubscribeMsg::UnsubscribeMsg() { type = Type::UNSUBSCRIBE; }
 
 UnsubscribeMsg* UnsubscribeMsg::clone() const {  return new UnsubscribeMsg(*this);  }
 
+const TopicName& UnsubscribeMsg::getTopic() const { return topic; }
 
 
 DisconnectMsg::DisconnectMsg() { type = Type::DISCONNECT; }

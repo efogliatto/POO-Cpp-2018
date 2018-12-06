@@ -7,8 +7,9 @@ using namespace std;
 
 BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
 
-    // Falta Sincronizacion para registro de clientes
-    
+
+    lock_guard<mutex> lg(mreg);
+        
     clients.push_back( new Client(c) );
 
     return clients.back();

@@ -34,8 +34,6 @@ int main( int argc, char **argv ) {
 
 
 
-
-
     // Join publishers
 
     for(auto &th : tpub)

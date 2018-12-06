@@ -42,7 +42,7 @@ void SimPublisher::runSim() {
 
     	PublishMsg m("Topico", "Valor");
 
-	cout << "Publishing user [" << ss.str() << "]" << endl;
+	// cout << "Publishing user [" << ss.str() << "]" << endl;
 
     	brops->sendMsg(m);
 

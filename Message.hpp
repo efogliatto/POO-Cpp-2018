@@ -14,7 +14,7 @@ public:
         
     enum class Type { CONNECT, CONNACK, PUBLISH, SUBSCRIBE, UNSUBSCRIBE, DISCONNECT };
 
-    Type getType() const;
+    const Type getType() const;
 
     
     virtual Message *clone() const = 0;
@@ -86,6 +86,12 @@ public:
     
     virtual PublishMsg* clone() const;
 
+    const TopicName& getTopic() const;
+
+    const TopicValue& getValue() const;
+
+    const bool& isRetained() const;    
+
     
 private:
 
@@ -108,6 +114,13 @@ public:
     
     virtual SubscribeMsg* clone() const;
 
+    const TopicName& getTopic() const;
+    
+
+private:
+
+    TopicName topic;
+
 };
 
 
@@ -119,6 +132,13 @@ public:
     UnsubscribeMsg();
     
     virtual UnsubscribeMsg* clone() const;
+
+    const TopicName& getTopic() const;
+
+
+private:
+
+    TopicName topic;    
 
 };
 

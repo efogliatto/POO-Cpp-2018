@@ -190,7 +190,7 @@ void Queue<T,N>::put(const T& val) {
     rear = (rear + 1) % N;
 
     data[rear] = val;
-    std::cout << "Inserting value " << val << std::endl;
+    // std::cout << "Inserting value " << val << std::endl;
 
     
 
@@ -265,7 +265,7 @@ void Queue<T,N>::get(T* val) {
     }
 
 
-    std::cout << "Extracting value " << *val << std::endl;
+    // std::cout << "Extracting value " << *val << std::endl;
 
     // Habilita la posicion de un nuevo elemento (por si la cola estaba llena)
     

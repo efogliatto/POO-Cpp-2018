@@ -16,6 +16,11 @@ private:
     std::vector<RetainedTopic*> topics_cache;
 
 
+    // Mutex para registro de clientes
+
+    std::mutex mreg;
+
+
 public:
 
     BrokerOpsIF* registerClient( ClientOpsIF* c );

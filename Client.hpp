@@ -16,7 +16,7 @@
 #include "Queue.hpp"
 
 
-using myqueue = Queue<Message*, 10>;
+using myqueue = Queue<Message*, 2>;
 
 
 
@@ -34,10 +34,14 @@ private:
 
     myqueue recvQueue;
 
+    void dispatch();
+
 
 public:
 
     Client(ClientOpsIF* c);
+
+    ~Client();
 
     void sendMsg( const Message& msg );
 
