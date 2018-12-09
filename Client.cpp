@@ -117,21 +117,6 @@ void Client::dispatch() {
 
 
 
-
-
-
-// Procesamiento de mensajes tipo PUBLISH
-
-void Client::processPublish( const Message* msg ) {
-
-    const PublishMsg* pmsg = dynamic_cast<const PublishMsg*>(msg);
-
-    cout << "Publicacion de usuario [" << user << "] en topico [" << pmsg->getTopic() << "]" << endl;
-
-}
-
-
-
 // Procesamiento de mensajes tipo CONNECT
 
 void Client::processConnect( const Message* msg ) {
@@ -161,20 +146,20 @@ void Client::processSubscribe( const Message* msg ) {
 
     if( subscriptions.find(&sub) == subscriptions.end() ) {
 	
-	subscriptions.insert( &sub );	
+    	subscriptions.insert( &sub );	
 
-	cout << "OK" << endl;
+    	cout << "OK" << endl;
 
 
-	// Incorporacion al broker
+    	// Incorporacion al broker
 
-	broker.addSubscription( sub );	
+    	broker.addSubscription( &sub );	
 
     }
 
     else {
 
-	cout << "Ya existe" << endl;
+    	cout << "Ya existe" << endl;
 
     }
 
@@ -197,13 +182,60 @@ void Client::processUnsubscribe( const Message* msg ) {
     
     Subscription sub{ umsg->getTopic(), this };
 
-    if( subscriptions.find(&sub) != subscriptions.end() )
-	subscriptions.erase( &sub );    
+    if( subscriptions.find(&sub) != subscriptions.end() ) {
+	
+	subscriptions.erase( &sub );
+
+	broker.removeSubscription( &sub );	
+
+    }
+
+    
 
 }
 
 
 
+
+// Procesamiento de mensajes tipo PUBLISH
+
+void Client::processPublish( const Message* msg ) {
+
+    const PublishMsg* pmsg = dynamic_cast<const PublishMsg*>(msg);
+
+    cout << "Publicacion de usuario [" << user << "] en topico [" << pmsg->getTopic() << "]" << endl;
+
+
+    // Si es un topico retenido, agregar a contenedor. Sino distribuir directamente a subscriptores
+    
+    if( pmsg->isRetained() ) {
+
+	RetainedTopic rt{ pmsg->getTopic(), pmsg->getValue(), this };
+
+	bool findTopic(false);
+
+	for(auto rtopics : topics) {
+
+	    if( rtopics->topic == rt.topic ) {
+
+		rtopics->value = rt.value;
+
+		findTopic = true;
+
+	    }
+
+	}
+
+	if(!findTopic)
+	    topics.insert(&rt);
+
+	
+	broker.updateRTopic( &rt );
+
+
+    }
+
+}
 
 
 

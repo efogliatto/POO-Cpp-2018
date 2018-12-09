@@ -1,4 +1,4 @@
-#include "SimPublisher.hpp"
+#include "SimSubscriptor.hpp"
 
 #include <iostream>
 
@@ -11,10 +11,10 @@ using namespace std;
 
 
 
-SimPublisher::SimPublisher(Broker& b) : SimClient(b) {}
+SimSubscriptor::SimSubscriptor(Broker& b) : SimClient(b) {}
 
 
-void SimPublisher::runSim() {
+void SimSubscriptor::runSim() {
 
 
     // Registro en el broker y solicitud de conexion
@@ -34,18 +34,14 @@ void SimPublisher::runSim() {
     
     // Esperar connack
 
-    for( int i = 0 ; i < 5 ; ++i ) {
 
-    	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
-	
-    	this_thread::sleep_for( chrono::milliseconds(sleep) );
+    SubscribeMsg m("Topico");
 
-    	PublishMsg m("Topico", "Valor");
+    brops->sendMsg(m);
 
-    	brops->sendMsg(m);
 
-    }
 
+    this_thread::sleep_for( chrono::seconds(10) );
     
     brops->sendMsg( DisconnectMsg() );
     
@@ -53,7 +49,7 @@ void SimPublisher::runSim() {
 }
 
 
-void SimPublisher::recvMsg(const Message& m) {
+void SimSubscriptor::recvMsg(const Message& m) {
 
 
 

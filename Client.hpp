@@ -54,7 +54,7 @@ private:
 
     // Topicos
 
-    std::vector<RetainedTopic*> topics;
+    std::multiset<RetainedTopic*> topics;
 
 
     // Cola de mensajes

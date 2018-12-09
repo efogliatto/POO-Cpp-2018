@@ -5,7 +5,7 @@ CPPFLAGS=-Wall -std=c++11
 LDFLAGS=
 LDLIBS=-lm -lpthread
 
-SRCS=MQTTSim.cpp Message.cpp SimClient.cpp SimPublisher.cpp Broker.cpp Client.cpp
+SRCS=MQTTSim.cpp Message.cpp SimClient.cpp SimPublisher.cpp SimSubscriptor.cpp Broker.cpp Client.cpp
 
 OBJS=$(subst .cpp,.o,$(SRCS))
 

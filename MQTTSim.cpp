@@ -4,6 +4,8 @@
 
 #include "SimPublisher.hpp"
 
+#include "SimSubscriptor.hpp"
+
 #include <vector>
 
 
@@ -33,12 +35,36 @@ int main( int argc, char **argv ) {
     	tpub.push_back( std::thread(&SimClient::start, publishers[i]) );
 
 
+    
+    // Publisher threads
+
+    int nsub = 1;
+
+    std::vector<SimSubscriptor*> subscriptors;
+
+    std::vector<std::thread> tsub;    
+
+    for( int i = 0 ; i < nsub ; i++ )
+	subscriptors.push_back( new SimSubscriptor(broker) );
+
+    for( int i = 0 ; i < nsub ; i++ )
+    	tsub.push_back( std::thread(&SimClient::start, subscriptors[i]) );
+
+
+
+    
 
     // Join publishers
 
     for(auto &th : tpub)
     	if(th.joinable())
     	    th.join();
-    
+
+
+    // Join subscriptors
+
+    for(auto &th : tsub)
+    	if(th.joinable())
+    	    th.join();    
         
 }

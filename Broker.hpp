@@ -17,14 +17,17 @@ private:
 
     // Registro de subscripciones
     
-    std::vector<Subscription*> subs_cache;
+    std::multiset<Subscription*> subs_cache;
 
     std::mutex msub;
+    
 
 
     // Registro de topicos retenidos
 
-    std::vector<RetainedTopic*> topics_cache;
+    std::multiset<RetainedTopic*> topics_cache;
+
+    std::mutex mtop;
 
 
     // Mutex para registro de clientes
@@ -42,7 +45,17 @@ public:
 
     // Nueva subscripcion
 
-    void addSubscription( const Subscription& sub );
+    void addSubscription( Subscription* sub );
+
+
+    // Remocion de subscripcion
+
+    void removeSubscription( Subscription* sub );
+
+
+    // Actualizacion de topico retenido
+
+    void updateRTopic( RetainedTopic* rt );
     
 
 };
