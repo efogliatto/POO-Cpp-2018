@@ -40,9 +40,9 @@ public:
 
     virtual ConnectMsg* clone() const;
 
-    const std::string& user();
+    const std::string& user() const;
 
-    const std::string& pswd();    
+    const std::string& pswd() const;    
     
     
 private:

@@ -18,9 +18,9 @@ ConnectMsg::ConnectMsg(const string& user, const string& pswd)
 
 ConnectMsg* ConnectMsg::clone() const {   return new ConnectMsg(*this);  }
 
-const string& ConnectMsg::user() { return username; };
+const string& ConnectMsg::user() const { return username; };
 
-const string& ConnectMsg::pswd() { return password; };
+const string& ConnectMsg::pswd() const { return password; };
 
 
 

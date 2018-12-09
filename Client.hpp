@@ -19,10 +19,16 @@
 using myqueue = Queue<Message*, 2>;
 
 
+class Broker;
+
+
 
 class Client : public BrokerOpsIF {
 
+    
 private:
+
+    Broker& broker;
 
     std::thread th;
 
@@ -34,16 +40,42 @@ private:
 
     myqueue recvQueue;
 
+    std::string user;
+
+
+    // Procesamiento de mensajes en general
+    
     void dispatch();
+
+
+    // Procesamiento de mensajes tipo PUBLISH
+
+    void processPublish( const Message* msg );
+
+
+    // Procesamiento de mensajes tipo CONNECT
+
+    void processConnect( const Message* msg );
+
+
+    // Procesamiento de mensajes tipo SUBSCRIBE
+
+    void processSubscribe( const Message* msg );
+    
+
+    // Procesamiento de mensajes tipo UNSUBSCRIBE
+
+    void processUnsubscribe( const Message* msg );
 
 
 public:
 
-    Client(ClientOpsIF* c);
+    Client( ClientOpsIF* c, Broker& br );
 
     ~Client();
 
     void sendMsg( const Message& msg );
+    
 
 };
 
