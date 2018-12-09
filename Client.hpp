@@ -13,13 +13,16 @@
 
 #include <vector>
 
+#include <set>
+
 #include "Queue.hpp"
 
 
 using myqueue = Queue<Message*, 2>;
 
-
 class Broker;
+
+#include "Broker.hpp"
 
 
 
@@ -28,17 +31,38 @@ class Client : public BrokerOpsIF {
     
 private:
 
+
+    // Referencia al broker
+    
     Broker& broker;
 
+
+    // Thread para despacho de mensajes durante la vida del Client
+    
     std::thread th;
 
+
+    // Puntero a la interfase
+    
     ClientOpsIF* cif;
 
-    std::vector<Subscription*> subscriptions;
+
+    // Subscripciones
+    
+    std::multiset<Subscription*> subscriptions;
+
+
+    // Topicos
 
     std::vector<RetainedTopic*> topics;
 
+
+    // Cola de mensajes
+
     myqueue recvQueue;
+
+
+    // Nombre de usuario
 
     std::string user;
 
@@ -70,6 +94,7 @@ private:
 
 public:
 
+    
     Client( ClientOpsIF* c, Broker& br );
 
     ~Client();

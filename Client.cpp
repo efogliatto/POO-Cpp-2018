@@ -74,6 +74,8 @@ void Client::dispatch() {
 	case Message::Type::DISCONNECT:
 
 	    proccess = false;
+
+	    cout << "Desconexion de usuario [" << user << "]" << endl;
 	    
 	    break;
 
@@ -150,7 +152,33 @@ void Client::processSubscribe( const Message* msg ) {
 
     const SubscribeMsg* smsg = dynamic_cast<const SubscribeMsg*>(msg);
 
-    cout << "Subscripcion de usuario [" << user << "] en topico [" << smsg->getTopic() << "]" << endl;
+    cout << "Subscripcion de usuario [" << user << "] en topico [" << smsg->getTopic() << "]: ";
+
+
+    // Incorporacion al contenedor local
+    
+    Subscription sub{ smsg->getTopic(), this };
+
+    if( subscriptions.find(&sub) == subscriptions.end() ) {
+	
+	subscriptions.insert( &sub );	
+
+	cout << "OK" << endl;
+
+
+	// Incorporacion al broker
+
+	broker.addSubscription( sub );	
+
+    }
+
+    else {
+
+	cout << "Ya existe" << endl;
+
+    }
+
+    
 
 }
     
@@ -164,114 +192,18 @@ void Client::processUnsubscribe( const Message* msg ) {
 
     cout << "Desubscripcion de usuario [" << user << "] en topico [" << umsg->getTopic() << "]" << endl;
 
+
+    // Remocion del contenedor local
+    
+    Subscription sub{ umsg->getTopic(), this };
+
+    if( subscriptions.find(&sub) != subscriptions.end() )
+	subscriptions.erase( &sub );    
+
 }
 
 
 
-
-
-
-
-
-
-// void Client::dispatch() {
-
-//     Message* msg;
-
-//     recvQueue.get( &msg );
-
-
-//     // El primer mensaje tiene que ser de conexion
-
-//     if( msg->getType() == Message::Type::CONNECT ) {
-
-
-// 	// Hay que hacer la conexion correcta y enviar un ConnAck
-	
-// 	ConnectMsg* clientMsg = (ConnectMsg*) msg;
-
-// 	cout << "Conexion del cliente " << clientMsg->user() << endl;
-
-
-	
-// 	// Procesamiento de mensajes    
-    
-// 	while( msg->getType() != Message::Type::DISCONNECT ) {   
-
-	    
-// 	    recvQueue.get( &msg );
-
-
-// 	    // Mensaje de publicacion
-	    
-// 	    if( msg->getType() == Message::Type::PUBLISH ) {
-
-// 	    	PublishMsg* pmsg = (PublishMsg *) msg;
-
-// 	    	cout << "Publicacion de usuario [" << clientMsg->user() << "] en topico [" << pmsg->getTopic() << "]" << endl;
-
-// 		if( pmsg->isRetained() ) {
-
-// 		    bool find(false);
-
-// 		    for( auto &r : topics ) {
-
-// 			if( r->topic == pmsg->getTopic() ) {
-			    
-// 			    r->value = pmsg->getValue();
-
-// 			    find = true;
-
-// 			}
-
-// 		    }
-
-// 		    if( !find ) {
-			
-// 		    	// topics.push_back( new RetainedTopic{ topic = pmsg->getTopic(), value = pmsg->getValue(), *owner = this } );
-// 		    	topics.push_back( new RetainedTopic{ pmsg->getTopic(), pmsg->getValue(), this } );			
-			
-// 		    }
-
-// 		}
-
-// 	    }
-
-
-
-// 	    // Mensaje de subscripcion
-
-// 	    if( msg->getType() == Message::Type::SUBSCRIBE ) {
-
-// 	    	SubscribeMsg* pmsg = (SubscribeMsg *) msg;
-
-// 		cout << "Subscripcion de usuario [" << clientMsg->user() << "] en topico [" << pmsg->getTopic() << "]" << endl;
-
-// 	    }
-
-
-	    
-// 	    // Mensaje de desubscripcion
-
-// 	    if( msg->getType() == Message::Type::UNSUBSCRIBE ) {
-
-// 		UnsubscribeMsg* pmsg = (UnsubscribeMsg *) msg;
-
-// 		cout << "Desubscripcion de usuario [" << clientMsg->user() << "] en topico [" << pmsg->getTopic() << "]" << endl;
-
-// 	    }	    
-
-	    
-// 	}
-
-	
-
-
-// 	cout << "Desconexion del cliente " << clientMsg->user() << endl;
-
-//     }    
-
-// }
 
 
 

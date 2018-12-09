@@ -47,7 +47,7 @@ const bool& PublishMsg::isRetained() const { return retain; }
 
 
 
-SubscribeMsg::SubscribeMsg() { type = Type::SUBSCRIBE; }
+SubscribeMsg::SubscribeMsg(const TopicName& tn) : topic(tn) { type = Type::SUBSCRIBE; }
 
 SubscribeMsg* SubscribeMsg::clone() const {  return new SubscribeMsg(*this);  }
 
@@ -55,7 +55,7 @@ const TopicName& SubscribeMsg::getTopic() const { return topic; }
 
 
 
-UnsubscribeMsg::UnsubscribeMsg() { type = Type::UNSUBSCRIBE; }
+UnsubscribeMsg::UnsubscribeMsg(const TopicName& tn) : topic(tn) { type = Type::UNSUBSCRIBE; }
 
 UnsubscribeMsg* UnsubscribeMsg::clone() const {  return new UnsubscribeMsg(*this);  }
 

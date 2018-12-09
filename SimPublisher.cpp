@@ -34,13 +34,30 @@ void SimPublisher::runSim() {
     
     // Esperar connack
 
+    // for( int i = 0 ; i < 5 ; ++i ) {
+
+    // 	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
+	
+    // 	this_thread::sleep_for( chrono::milliseconds(sleep) );
+
+    // 	PublishMsg m("Topico", "Valor");
+
+    // 	// cout << "Publishing user [" << ss.str() << "]" << endl;
+
+    // 	brops->sendMsg(m);
+
+    // }
+
+
+
+
     for( int i = 0 ; i < 5 ; ++i ) {
 
     	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
 	
     	this_thread::sleep_for( chrono::milliseconds(sleep) );
 
-    	PublishMsg m("Topico", "Valor");
+    	SubscribeMsg m("Topico");
 
 	// cout << "Publishing user [" << ss.str() << "]" << endl;
 
@@ -48,6 +65,36 @@ void SimPublisher::runSim() {
 
     }
 
+    {
+
+    	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
+	
+    	this_thread::sleep_for( chrono::milliseconds(sleep) );
+
+    	UnsubscribeMsg m("Topico");
+
+	// cout << "Publishing user [" << ss.str() << "]" << endl;
+
+    	brops->sendMsg(m);	
+
+    }
+
+    {
+
+    	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
+	
+    	this_thread::sleep_for( chrono::milliseconds(sleep) );
+
+    	SubscribeMsg m("Topico");
+
+	// cout << "Publishing user [" << ss.str() << "]" << endl;
+
+    	brops->sendMsg(m);	
+
+    }
+
+
+    
     brops->sendMsg( DisconnectMsg() );
     
 

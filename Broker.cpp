@@ -15,3 +15,16 @@ BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
     return clients.back();
 
 }
+
+
+
+
+// Nueva subscripcion
+
+void Broker::addSubscription( const Subscription& sub ) {
+
+    lock_guard<mutex> lg(msub);
+
+    
+
+}

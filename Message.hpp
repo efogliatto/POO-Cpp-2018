@@ -110,7 +110,7 @@ class SubscribeMsg : public Message {
 
 public:
 
-    SubscribeMsg();
+    SubscribeMsg(const TopicName& tn);
     
     virtual SubscribeMsg* clone() const;
 
@@ -129,7 +129,7 @@ class UnsubscribeMsg : public Message {
 
 public:
 
-    UnsubscribeMsg();
+    UnsubscribeMsg(const TopicName& tn);
     
     virtual UnsubscribeMsg* clone() const;
 
