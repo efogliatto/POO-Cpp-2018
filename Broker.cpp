@@ -30,13 +30,25 @@ void Broker::addSubscription( Subscription* sub ) {
 
     unique_access< multiset<Subscription*> > accessSub(subs_cache);
 
-    if( accessSub->find(sub) == accessSub->end() ) {
-	
+    if( accessSub->find(sub) == accessSub->end() )	
     	accessSub->insert( sub );
 
-    	cout << "Tambien del broker" << endl;
 
-    }
+
+    // Acceso al registro de retained topics para ver si esta disponible
+
+    unique_access< multiset<RetainedTopic*> > accessTopic(topics_cache);
+
+    for(auto rtopics : *accessTopic) {
+
+    	if( rtopics->topic == sub->topic ) {
+
+	    cout << "Ya estaba registrada" << endl;
+
+    	}
+
+    }    
+    
     
 }
 
@@ -53,6 +65,7 @@ void Broker::removeSubscription( Subscription* sub ) {
 
     if( accessSub->find(sub) != accessSub->end() )
     	accessSub->erase( sub );
+
 
 }
 

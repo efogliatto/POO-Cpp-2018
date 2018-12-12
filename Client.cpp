@@ -132,6 +132,23 @@ void Client::processConnect( const Message* msg ) {
 
 
 
+
+// Procesamiento de mensajes tipo DISCONNECT
+
+void Client::processDisconnect( const Message* msg ) {
+
+
+    // Es necesario remover las subscripciones y retained topics que quedan en el broker
+    
+    for( auto sub : subscriptions )
+	broker.removeSubscription( sub );	    
+
+    
+
+}
+
+
+
 // Procesamiento de mensajes tipo SUBSCRIBE
 
 void Client::processSubscribe( const Message* msg ) {
@@ -158,13 +175,6 @@ void Client::processSubscribe( const Message* msg ) {
     	broker.addSubscription( &sub );	
 
     }
-
-    else {
-
-    	thout << "Ya existe" << endl;
-
-    }    
-
     
 }
     
@@ -179,19 +189,20 @@ void Client::processUnsubscribe( const Message* msg ) {
     thout << "Desubscripcion de usuario [" << user << "] en topico [" << umsg->getTopic() << "]" << endl;
 
 
-    // Remocion del contenedor local
+    // Remocion de la subscripcion (local y broker)
     
-    Subscription sub{ umsg->getTopic(), this };
+    for( auto sub : subscriptions ) {
 
-    if( subscriptions.find(&sub) != subscriptions.end() ) {
-	
-	subscriptions.erase( &sub );
+	if( sub->topic == umsg->getTopic() ) {
 
-	broker.removeSubscription( &sub );	
+	    subscriptions.erase( sub );
+
+	    broker.removeSubscription( sub );
+	    
+	}
 
     }
 
-    
 
 }
 
@@ -237,7 +248,7 @@ void Client::processPublish( const Message* msg ) {
     }
 
 
-    // Distribucion a subscriptores
+    // Distribucion a todos los subscriptores
 
     broker.sendTopic( pmsg->getTopic(), pmsg->getValue() );
     

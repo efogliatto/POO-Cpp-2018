@@ -35,6 +35,12 @@ void SimSubscriptor::runSim() {
     // Esperar connack
 
 
+    // Envio de mensaje de subscripcion
+
+    int sleep = 1000 + rand() / (RAND_MAX / 2001 + 1);
+	
+    this_thread::sleep_for( chrono::milliseconds(sleep) );   
+    
     SubscribeMsg m("Topico");
 
     brops->sendMsg(m);
@@ -43,10 +49,12 @@ void SimSubscriptor::runSim() {
 
     this_thread::sleep_for( chrono::seconds(3) );
 
-    brops->sendMsg(m);
+    // UnsubscribeMsg um("Topico");
+    
+    // brops->sendMsg(um);
 
 
-    this_thread::sleep_for( chrono::seconds(3) );
+    // this_thread::sleep_for( chrono::seconds(3) );
     
     brops->sendMsg( DisconnectMsg() );
     

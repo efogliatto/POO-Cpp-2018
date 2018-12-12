@@ -46,7 +46,6 @@ private:
 
     // Puntero a la interfase
     
-    // ClientOpsIF* cif;
     lockedVar<ClientOpsIF*> cif;
 
 
@@ -83,6 +82,11 @@ private:
     // Procesamiento de mensajes tipo CONNECT
 
     void processConnect( const Message* msg );
+
+
+    // Procesamiento de mensajes tipo DISCONNECT
+
+    void processDisconnect( const Message* msg );    
 
 
     // Procesamiento de mensajes tipo SUBSCRIBE
