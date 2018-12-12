@@ -1,5 +1,7 @@
 #include "Client.hpp"
 
+#include "threadStream.hpp"
+
 #include <iostream>
 
 using namespace std;
@@ -75,7 +77,7 @@ void Client::dispatch() {
 
 	    proccess = false;
 
-	    cout << "Desconexion de usuario [" << user << "]" << endl;
+	    thout << "Desconexion de usuario [" << user << "]" << endl;
 	    
 	    break;
 
@@ -125,7 +127,7 @@ void Client::processConnect( const Message* msg ) {
 
     user = cmsg->user();
 
-    cout << "Solicitud de conexion de usuario [" << user << "]" << endl;
+    thout << "Solicitud de conexion de usuario [" << user << "]" << endl;
 	    
 }
 
@@ -137,7 +139,7 @@ void Client::processSubscribe( const Message* msg ) {
 
     const SubscribeMsg* smsg = dynamic_cast<const SubscribeMsg*>(msg);
 
-    cout << "Subscripcion de usuario [" << user << "] en topico [" << smsg->getTopic() << "]: ";
+    thout << "Subscripcion de usuario [" << user << "] en topico [" << smsg->getTopic() << "]: ";
 
 
     // Incorporacion al contenedor local
@@ -148,7 +150,7 @@ void Client::processSubscribe( const Message* msg ) {
 	
     	subscriptions.insert( &sub );	
 
-    	cout << "OK" << endl;
+    	thout << "OK" << endl;
 
 
     	// Incorporacion al broker
@@ -159,7 +161,7 @@ void Client::processSubscribe( const Message* msg ) {
 
     else {
 
-    	cout << "Ya existe" << endl;
+    	thout << "Ya existe" << endl;
 
     }
 
@@ -175,7 +177,7 @@ void Client::processUnsubscribe( const Message* msg ) {
 
     const UnsubscribeMsg* umsg = dynamic_cast<const UnsubscribeMsg *>(msg);
 
-    cout << "Desubscripcion de usuario [" << user << "] en topico [" << umsg->getTopic() << "]" << endl;
+    thout << "Desubscripcion de usuario [" << user << "] en topico [" << umsg->getTopic() << "]" << endl;
 
 
     // Remocion del contenedor local
@@ -203,7 +205,7 @@ void Client::processPublish( const Message* msg ) {
 
     const PublishMsg* pmsg = dynamic_cast<const PublishMsg*>(msg);
 
-    cout << "Publicacion de usuario [" << user << "] en topico [" << pmsg->getTopic() << "]" << endl;
+    thout << "Publicacion de usuario [" << user << "] en topico [" << pmsg->getTopic() << "]" << endl;
 
 
     // Si es un topico retenido, agregar a contenedor. Sino distribuir directamente a subscriptores
