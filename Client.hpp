@@ -17,6 +17,8 @@
 
 #include "Queue.hpp"
 
+#include "lockedVar.hpp"
+
 
 using myqueue = Queue<Message*, 2>;
 
@@ -44,7 +46,8 @@ private:
 
     // Puntero a la interfase
     
-    ClientOpsIF* cif;
+    // ClientOpsIF* cif;
+    lockedVar<ClientOpsIF*> cif;
 
 
     // Subscripciones

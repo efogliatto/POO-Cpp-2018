@@ -3,6 +3,8 @@
 
 #include "Client.hpp"
 
+#include "lockedVar.hpp"
+
 
 class Broker {
 
@@ -17,22 +19,27 @@ private:
 
     // Registro de subscripciones
     
-    std::multiset<Subscription*> subs_cache;
+    // std::multiset<Subscription*> subs_cache;
 
-    std::mutex msub;
+    // std::mutex msub;
+
+    lockedVar< std::multiset<Subscription*> > subs_cache;    
     
 
 
     // Registro de topicos retenidos
 
-    std::multiset<RetainedTopic*> topics_cache;
+    // std::multiset<RetainedTopic*> topics_cache;
 
-    std::mutex mtop;
+    // std::mutex mtop;
+
+    lockedVar< std::multiset<RetainedTopic*> > topics_cache;
 
 
     // Mutex para registro de clientes
 
     std::mutex mreg;
+    
 
 
 public:
@@ -58,6 +65,11 @@ public:
     void updateRTopic( RetainedTopic* rt );
     
 
+    // Envio de topico a subscriptores
+
+    void sendTopic( const TopicName& name, const TopicValue& val );
+
+    
 };
 
 

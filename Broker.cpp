@@ -1,5 +1,7 @@
 #include "Broker.hpp"
 
+// #include "threadStream.hpp"
+
 #include <iostream>
 
 using namespace std;
@@ -23,16 +25,19 @@ BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
 
 void Broker::addSubscription( Subscription* sub ) {
 
-    lock_guard<mutex> lg(msub);
 
-    if( subs_cache.find(sub) == subs_cache.end() ) {
+    // Acceso al registro de subscripciones a traves del accessor
+
+    unique_access< multiset<Subscription*> > accessSub(subs_cache);
+
+    if( accessSub->find(sub) == accessSub->end() ) {
 	
-	subs_cache.insert( sub );
+    	accessSub->insert( sub );
 
-	// cout << "Tambien del broker" << endl;
+    	cout << "Tambien del broker" << endl;
 
     }
-
+    
 }
 
 
@@ -41,10 +46,13 @@ void Broker::addSubscription( Subscription* sub ) {
 
 void Broker::removeSubscription( Subscription* sub ) {
 
-    lock_guard<mutex> lg(msub);
 
-    if( subs_cache.find(sub) != subs_cache.end() )
-	subs_cache.erase( sub );
+    // Acceso al registro de subscripciones a traves del accessor
+
+    unique_access< multiset<Subscription*> > accessSub(subs_cache);
+
+    if( accessSub->find(sub) != accessSub->end() )
+    	accessSub->erase( sub );
 
 }
 
@@ -54,32 +62,55 @@ void Broker::removeSubscription( Subscription* sub ) {
 
 void Broker::updateRTopic( RetainedTopic* rt ) {
 
-    lock_guard<mutex> lg(mtop);
+    
+    // Acceso al registro de topicos a traves del accessor
 
+    unique_access< multiset<RetainedTopic*> > accessTopic(topics_cache);
 
+    
     // Incorporacion al cache de topicos retenidos
+    // Si ya existe, actualiza el valor
     
     bool findTopic(false);
 
-    for(auto rtopics : topics_cache) {
+    for(auto rtopics : *accessTopic) {
 
-	if( rtopics->topic == rt->topic ) {
+    	if( rtopics->topic == rt->topic ) {
 
-	    rtopics->value = rt->value;
+    	    rtopics->value = rt->value;
 
-	    findTopic = true;
+    	    findTopic = true;
 
-	}
+    	}
 
     }
 
-    if(!findTopic)
-	topics_cache.insert(rt);
+    if(!findTopic)	
+    	accessTopic->insert(rt);           
+
+}
 
 
 
-    // Distribucion a los subscriptores
+
+
+// Envio de topico a subscriptores
+
+void Broker::sendTopic( const TopicName& name, const TopicValue& val ) {
 
     
+    // Distribucion de mensajes a los subscriptores     
+
+    unique_access< multiset<Subscription*> > accessSub(subs_cache);
+
+    for(auto sub : *accessSub) {
+
+    	if( sub->topic == name ) {
+
+	    cout << "Enviando mensaje de topico [" << name << "] a subscriptor [" << "]" << endl;
+
+    	}
+
+    }    
 
 }

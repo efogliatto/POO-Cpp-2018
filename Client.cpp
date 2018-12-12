@@ -9,10 +9,9 @@ using namespace std;
 
 // Constructor
 
-Client::Client(ClientOpsIF* c, Broker& br) : broker(br) {
-
-    
-    cif = c;
+Client::Client(ClientOpsIF* c, Broker& br)
+    : broker(br),
+      cif(c) {
 
 
     // Nombre por defecto
@@ -58,7 +57,7 @@ void Client::dispatch() {
 	recvQueue.get( &msg );
 
 
-	// Tipo de mensaje. Declaracion de variables para uso en switch
+	// Tipo de mensaje
 
 	const Message::Type mtype = msg->getType();
 	
@@ -137,6 +136,7 @@ void Client::processConnect( const Message* msg ) {
 
 void Client::processSubscribe( const Message* msg ) {
 
+    
     const SubscribeMsg* smsg = dynamic_cast<const SubscribeMsg*>(msg);
 
     thout << "Subscripcion de usuario [" << user << "] en topico [" << smsg->getTopic() << "]: ";
@@ -163,10 +163,9 @@ void Client::processSubscribe( const Message* msg ) {
 
     	thout << "Ya existe" << endl;
 
-    }
+    }    
 
     
-
 }
     
 
@@ -202,6 +201,7 @@ void Client::processUnsubscribe( const Message* msg ) {
 // Procesamiento de mensajes tipo PUBLISH
 
 void Client::processPublish( const Message* msg ) {
+    
 
     const PublishMsg* pmsg = dynamic_cast<const PublishMsg*>(msg);
 
@@ -234,8 +234,13 @@ void Client::processPublish( const Message* msg ) {
 	
 	broker.updateRTopic( &rt );
 
-
     }
+
+
+    // Distribucion a subscriptores
+
+    broker.sendTopic( pmsg->getTopic(), pmsg->getValue() );
+    
 
 }
 

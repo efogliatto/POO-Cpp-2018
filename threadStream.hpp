@@ -1,5 +1,5 @@
-#ifndef THREADSTREAM
-#define THREADSTREAM
+#ifndef THREADSTREAM_HPP
+#define THREADSTREAM_HPP
 
 #include <iostream>
 #include <sstream>
@@ -40,4 +40,4 @@ private:
 
 std::mutex ThreadStream::_mutex_threadstream{};
 
-#endif
+#endif // THREADSTREAM_HPP

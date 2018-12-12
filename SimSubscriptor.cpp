@@ -41,7 +41,12 @@ void SimSubscriptor::runSim() {
 
 
 
-    this_thread::sleep_for( chrono::seconds(10) );
+    this_thread::sleep_for( chrono::seconds(3) );
+
+    brops->sendMsg(m);
+
+
+    this_thread::sleep_for( chrono::seconds(3) );
     
     brops->sendMsg( DisconnectMsg() );
     
