@@ -47,14 +47,14 @@ void SimSubscriptor::runSim() {
 
 
 
-    this_thread::sleep_for( chrono::seconds(3) );
+    this_thread::sleep_for( chrono::seconds(2) );
 
-    // UnsubscribeMsg um("Topico");
+    UnsubscribeMsg um("Topico");
     
-    // brops->sendMsg(um);
+    brops->sendMsg(um);
 
 
-    // this_thread::sleep_for( chrono::seconds(3) );
+    this_thread::sleep_for( chrono::seconds(1) );
     
     brops->sendMsg( DisconnectMsg() );
     

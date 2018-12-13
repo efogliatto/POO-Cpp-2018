@@ -1,7 +1,5 @@
 #include "Client.hpp"
 
-#include "threadStream.hpp"
-
 #include <iostream>
 
 using namespace std;
@@ -76,7 +74,7 @@ void Client::dispatch() {
 
 	    proccess = false;
 
-	    thout << "Desconexion de usuario [" << user << "]" << endl;
+	    cout << "Desconexion de usuario [" << user << "]" << endl;
 	    
 	    break;
 
@@ -126,7 +124,7 @@ void Client::processConnect( const Message* msg ) {
 
     user = cmsg->user();
 
-    thout << "Solicitud de conexion de usuario [" << user << "]" << endl;
+    cout << "Solicitud de conexion de usuario [" + user + "]\n";   
 	    
 }
 
@@ -141,7 +139,7 @@ void Client::processDisconnect( const Message* msg ) {
     // Es necesario remover las subscripciones y retained topics que quedan en el broker
     
     for( auto sub : subscriptions )
-	broker.removeSubscription( sub );	    
+	broker.removeSubscription( *sub );	    
 
     
 
@@ -156,24 +154,30 @@ void Client::processSubscribe( const Message* msg ) {
     
     const SubscribeMsg* smsg = dynamic_cast<const SubscribeMsg*>(msg);
 
-    thout << "Subscripcion de usuario [" << user << "] en topico [" << smsg->getTopic() << "]: ";
+    cout << "Subscripcion de usuario [" + user + "] en topico [" + smsg->getTopic() + "]\n";
+
 
 
     // Incorporacion al contenedor local
-    
-    Subscription sub{ smsg->getTopic(), this };
 
-    if( subscriptions.find(&sub) == subscriptions.end() ) {
+    bool find(false);
+
+    for( auto sub : subscriptions ) {
+
+	if( sub->topic == smsg->getTopic() )
+	    find = true;	    
+
+    }
+
+
+    if( !find ) {
+
+	Subscription sub{ smsg->getTopic(), this };
 	
-    	subscriptions.insert( &sub );	
-
-    	thout << "OK" << endl;
-
-
-    	// Incorporacion al broker
-
-    	broker.addSubscription( &sub );	
-
+	subscriptions.insert( &sub );
+	
+    	broker.addSubscription( sub );
+	
     }
     
 }
@@ -186,8 +190,12 @@ void Client::processUnsubscribe( const Message* msg ) {
 
     const UnsubscribeMsg* umsg = dynamic_cast<const UnsubscribeMsg *>(msg);
 
-    thout << "Desubscripcion de usuario [" << user << "] en topico [" << umsg->getTopic() << "]" << endl;
+    cout << "Desubscripcion de usuario [" + user + "] en topico [" + umsg->getTopic() + "]\n";
 
+    cout << "\n\n";
+    cout << subscriptions[0]->topic;
+    cout << "\n\n";
+    
 
     // Remocion de la subscripcion (local y broker)
     
@@ -197,12 +205,11 @@ void Client::processUnsubscribe( const Message* msg ) {
 
 	    subscriptions.erase( sub );
 
-	    broker.removeSubscription( sub );
+	    broker.removeSubscription( *sub );
 	    
 	}
 
     }
-
 
 }
 
@@ -216,7 +223,7 @@ void Client::processPublish( const Message* msg ) {
 
     const PublishMsg* pmsg = dynamic_cast<const PublishMsg*>(msg);
 
-    thout << "Publicacion de usuario [" << user << "] en topico [" << pmsg->getTopic() << "]" << endl;
+    cout << "Publicacion de usuario [" + user + "] en topico [" + pmsg->getTopic() + "]\n";
 
 
     // Si es un topico retenido, agregar a contenedor. Sino distribuir directamente a subscriptores

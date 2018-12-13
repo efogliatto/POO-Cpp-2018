@@ -12,34 +12,19 @@ class Broker {
 private:
 
     
-    // Registro de clientes
+    // Registro de clientes   
+
+    lockedVar< std::vector<Client*> > clients;
     
-    std::vector<Client*> clients;
 
-
-    // Registro de subscripciones
-    
-    // std::multiset<Subscription*> subs_cache;
-
-    // std::mutex msub;
+    // Registro de subscripciones    
 
     lockedVar< std::multiset<Subscription*> > subs_cache;    
     
 
-
     // Registro de topicos retenidos
 
-    // std::multiset<RetainedTopic*> topics_cache;
-
-    // std::mutex mtop;
-
-    lockedVar< std::multiset<RetainedTopic*> > topics_cache;
-
-
-    // Mutex para registro de clientes
-
-    std::mutex mreg;
-    
+    lockedVar< std::multiset<RetainedTopic*> > topics_cache;    
 
 
 public:
@@ -52,12 +37,12 @@ public:
 
     // Nueva subscripcion
 
-    void addSubscription( Subscription* sub );
+    void addSubscription( Subscription& sub );
 
 
     // Remocion de subscripcion
 
-    void removeSubscription( Subscription* sub );
+    void removeSubscription( Subscription& sub );
 
 
     // Actualizacion de topico retenido
