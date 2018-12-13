@@ -37,12 +37,12 @@ public:
 
     // Nueva subscripcion
 
-    void addSubscription( Subscription& sub );
+    void addSubscription( Subscription* sub );
 
 
     // Remocion de subscripcion
 
-    void removeSubscription( Subscription& sub );
+    void removeSubscription( Subscription* sub );
 
 
     // Actualizacion de topico retenido

@@ -5,6 +5,9 @@
 using namespace std;
 
 
+
+// Registro de cliente en el broker
+
 BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
     
     unique_access< vector<Client*> > accessClient( clients );
@@ -20,14 +23,14 @@ BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
 
 // Nueva subscripcion
 
-void Broker::addSubscription( Subscription& sub ) {
+void Broker::addSubscription( Subscription* sub ) {
 
 
     // Acceso al registro de subscripciones a traves del accessor
 
     unique_access< multiset<Subscription*> > accessSub(subs_cache);
 
-    accessSub->insert( &sub );
+    accessSub->insert( sub );
 
 
 
@@ -37,9 +40,15 @@ void Broker::addSubscription( Subscription& sub ) {
 
     for(auto rtopics : *accessTopic) {
 
-    	if( rtopics->topic == sub.topic ) {
+    	if( rtopics->topic == sub->topic ) {
 
-    	    cout << "FALTA IMPLEMENTAR MENSAJE DE RECEPCION\n";
+
+	    unique_access< ClientOpsIF* > cif = sub->owner->CIF();
+	    
+	    PublishMsg m( "Enviando mensaje de topico [" + rtopics->topic + "] a subscriptor", "" );
+
+	    (*cif)->recvMsg(m);	 
+	    
 
     	}
 
@@ -52,9 +61,8 @@ void Broker::addSubscription( Subscription& sub ) {
 
 // Remocion de subscripcion
 
-void Broker::removeSubscription( Subscription& sub ) {
+void Broker::removeSubscription( Subscription* sub ) {
 
-    cout << "erased\n";
     
     // Acceso al registro de subscripciones a traves del accessor
 
@@ -62,20 +70,14 @@ void Broker::removeSubscription( Subscription& sub ) {
 
     for( auto rsub : *accessSub ) {
 
-    	if( (sub.topic == rsub->topic)  &&  (sub.owner == rsub->owner) ) {
-	    
-    	    accessSub->erase( rsub );
-
-	}
+    	if( (sub->topic == rsub->topic)  &&  (sub->owner == rsub->owner) )
+	    accessSub->erase( rsub );
 
     }
     
 
-    // if( accessSub->find(sub) != accessSub->end() )
-    // 	accessSub->erase( sub );
-
-
 }
+
 
 
 
@@ -128,7 +130,11 @@ void Broker::sendTopic( const TopicName& name, const TopicValue& val ) {
 
     	if( sub->topic == name ) {
 
-	    cout << "Enviando mensaje de topico [" << name << "] a subscriptor [" << "]" << endl;
+	    unique_access< ClientOpsIF* > cif = sub->owner->CIF();
+	    
+	    PublishMsg m( "Enviando mensaje de topico [" + name + "] a subscriptor", "" );
+
+	    (*cif)->recvMsg(m);	    
 
     	}
 

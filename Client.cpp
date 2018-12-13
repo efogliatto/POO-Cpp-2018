@@ -139,8 +139,7 @@ void Client::processDisconnect( const Message* msg ) {
     // Es necesario remover las subscripciones y retained topics que quedan en el broker
     
     for( auto sub : subscriptions )
-	broker.removeSubscription( *sub );	    
-
+	broker.removeSubscription( sub );	    
     
 
 }
@@ -172,13 +171,14 @@ void Client::processSubscribe( const Message* msg ) {
 
     if( !find ) {
 
-	Subscription sub{ smsg->getTopic(), this };
+	Subscription* sub = new Subscription{ smsg->getTopic(), this };
 	
-	subscriptions.insert( &sub );
+	subscriptions.insert( sub );
 	
     	broker.addSubscription( sub );
 	
     }
+    
     
 }
     
@@ -192,20 +192,17 @@ void Client::processUnsubscribe( const Message* msg ) {
 
     cout << "Desubscripcion de usuario [" + user + "] en topico [" + umsg->getTopic() + "]\n";
 
-    cout << "\n\n";
-    cout << subscriptions[0]->topic;
-    cout << "\n\n";
     
 
     // Remocion de la subscripcion (local y broker)
     
     for( auto sub : subscriptions ) {
-
+	
 	if( sub->topic == umsg->getTopic() ) {
 
 	    subscriptions.erase( sub );
 
-	    broker.removeSubscription( *sub );
+	    broker.removeSubscription( sub );
 	    
 	}
 
@@ -230,27 +227,32 @@ void Client::processPublish( const Message* msg ) {
     
     if( pmsg->isRetained() ) {
 
-	RetainedTopic rt{ pmsg->getTopic(), pmsg->getValue(), this };
 
 	bool findTopic(false);
 
 	for(auto rtopics : topics) {
 
-	    if( rtopics->topic == rt.topic ) {
+	    if( rtopics->topic == pmsg->getTopic() ) {
 
-		rtopics->value = rt.value;
+		rtopics->value = pmsg->getValue();
 
 		findTopic = true;
-
+		
 	    }
 
 	}
-
-	if(!findTopic)
-	    topics.insert(&rt);
-
 	
-	broker.updateRTopic( &rt );
+
+	if( !findTopic ) {
+
+	    RetainedTopic* rt = new RetainedTopic{ pmsg->getTopic(), pmsg->getValue(), this };
+	    
+	    topics.insert( rt );
+
+	    broker.updateRTopic( rt );
+	    
+	}
+	
 
     }
 

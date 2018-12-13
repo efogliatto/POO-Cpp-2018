@@ -55,6 +55,30 @@ void SimPublisher::runSim() {
 
 void SimPublisher::recvMsg(const Message& m) {
 
+    
+    const Message::Type mtype = m.getType();
 
+    const PublishMsg* pmsg;
+
+
+    switch( mtype ) {
+
+
+    case Message::Type::PUBLISH:
+
+    	pmsg = dynamic_cast<const PublishMsg*>(&m);
+
+    	cout << pmsg->getTopic() + "\n";
+
+    	break;
+	    
+
+    default:
+
+    	break;
+
+	    
+    }
+	
 
 }

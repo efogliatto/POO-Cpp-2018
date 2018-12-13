@@ -101,12 +101,27 @@ private:
 
 public:
 
+
+    // Constructor
     
     Client( ClientOpsIF* c, Broker& br );
 
+
+    // Destructor
+    
     ~Client();
 
+
+    // Envio de mensaje al broker
+
     void sendMsg( const Message& msg );
+
+
+    // Referencia al cif
+
+    unique_access<ClientOpsIF*> CIF() { return unique_access<ClientOpsIF*>(cif); }    
+
+    
     
 
 };
