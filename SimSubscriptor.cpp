@@ -25,7 +25,9 @@ void SimSubscriptor::runSim() {
 
     ss << this_thread::get_id();
 
-    brops->sendMsg(  ConnectMsg( ss.str(), "pass" )  );
+    username = ss.str();    
+
+    brops->sendMsg(  ConnectMsg( username, "pass" )  );
 
 
 
@@ -62,30 +64,30 @@ void SimSubscriptor::runSim() {
 }
 
 
-void SimSubscriptor::recvMsg(const Message& m) {
+// void SimSubscriptor::recvMsg(const Message& m) {
 
-    const Message::Type mtype = m.getType();
+//     const Message::Type mtype = m.getType();
 
-    const PublishMsg* pmsg;
-
-
-    switch( mtype ) {
+//     const PublishMsg* pmsg;
 
 
-    case Message::Type::PUBLISH:
+//     switch( mtype ) {
 
-    	pmsg = dynamic_cast<const PublishMsg*>(&m);
 
-    	cout << pmsg->getTopic() + "\n";
+//     case Message::Type::PUBLISH:
 
-    	break;
+//     	pmsg = dynamic_cast<const PublishMsg*>(&m);
+
+//     	cout << pmsg->getTopic() + "\n";
+
+//     	break;
 	    
 
-    default:
+//     default:
 
-    	break;
+//     	break;
 
 	    
-    }
+//     }
 
-}
+// }

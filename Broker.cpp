@@ -141,3 +141,21 @@ void Broker::sendTopic( const TopicName& name, const TopicValue& val ) {
     }    
 
 }
+
+
+
+
+
+// Solicitud de conexion
+
+void Broker::connReq( Client* c ) {
+
+    unique_access< ClientOpsIF* > cif = c->CIF();
+
+    ConnAckMsg m;
+
+    m.setStatus( ConnAckMsg::Status::CONNECTION_OK );	   
+
+    (*cif)->recvMsg(m);	    
+
+}

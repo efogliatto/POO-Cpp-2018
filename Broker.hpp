@@ -54,6 +54,11 @@ public:
 
     void sendTopic( const TopicName& name, const TopicValue& val );
 
+
+    // Solicitud de conexion
+
+    void connReq( Client* c );
+
     
 };
 

@@ -31,6 +31,13 @@ Client::Client(ClientOpsIF* c, Broker& br)
 
 Client::~Client() {
 
+
+    // Es necesario remover las subscripciones y retained topics que quedan en el broker (por si no se solicito una desconexion)
+    
+    for( auto sub : subscriptions )
+	broker.removeSubscription( sub );
+    
+    
     if( th.joinable() )
 	th.join();
 
@@ -124,7 +131,9 @@ void Client::processConnect( const Message* msg ) {
 
     user = cmsg->user();
 
-    cout << "Solicitud de conexion de usuario [" + user + "]\n";   
+    cout << "Solicitud de conexion de usuario [" + user + "]\n";
+
+    broker.connReq( this );
 	    
 }
 

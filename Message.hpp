@@ -67,6 +67,10 @@ public:
     enum class Status { CONNECTION_OK, LOGIN_ERROR };
 
     virtual ConnAckMsg* clone() const;
+
+    void setStatus( const Status& st ) { status = st; }
+
+    const Status& getStatus() const { return status; }
     
 
 private:

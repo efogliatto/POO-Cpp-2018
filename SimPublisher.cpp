@@ -25,60 +25,66 @@ void SimPublisher::runSim() {
 
     ss << this_thread::get_id();
 
-    brops->sendMsg(  ConnectMsg( ss.str(), "pass" )  );
+    username = ss.str();
+
+    brops->sendMsg(  ConnectMsg( username, "pass" )  );
 
 
 
     // Simulacion si la conexion es correcta
 
+    if( status == ConnAckMsg::Status::CONNECTION_OK ) {
     
-    // Esperar connack
 
-    for( int i = 0 ; i < 5 ; ++i ) {
 
-    	int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
+	for( int i = 0 ; i < 5 ; ++i ) {
+
+	    int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
 	
-    	this_thread::sleep_for( chrono::milliseconds(sleep) );
+	    this_thread::sleep_for( chrono::milliseconds(sleep) );
 
-    	PublishMsg m("Topico", "Valor");
+	    PublishMsg m("Topico", "Valor");
 
-    	brops->sendMsg(m);
+	    brops->sendMsg(m);
+
+	}
+
+    
+	brops->sendMsg( DisconnectMsg() );
+
 
     }
-
-    
-    brops->sendMsg( DisconnectMsg() );
     
 
 }
 
 
-void SimPublisher::recvMsg(const Message& m) {
+// void SimPublisher::recvMsg(const Message& m) {
 
     
-    const Message::Type mtype = m.getType();
+//     const Message::Type mtype = m.getType();
 
-    const PublishMsg* pmsg;
-
-
-    switch( mtype ) {
+//     const PublishMsg* pmsg;
 
 
-    case Message::Type::PUBLISH:
+//     switch( mtype ) {
 
-    	pmsg = dynamic_cast<const PublishMsg*>(&m);
 
-    	cout << pmsg->getTopic() + "\n";
+//     case Message::Type::PUBLISH:
 
-    	break;
+//     	pmsg = dynamic_cast<const PublishMsg*>(&m);
+
+//     	cout << pmsg->getTopic() + "\n";
+
+//     	break;
 	    
 
-    default:
+//     default:
 
-    	break;
+//     	break;
 
 	    
-    }
+//     }
 	
 
-}
+// }

@@ -15,7 +15,7 @@ public:
 
     SimSubscriptor(Broker& b);
     
-    void recvMsg(const Message& m);
+    // void recvMsg(const Message& m);
 
 };
 

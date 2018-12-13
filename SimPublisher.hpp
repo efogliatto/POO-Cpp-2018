@@ -15,7 +15,7 @@ public:
 
     SimPublisher(Broker& b);
     
-    void recvMsg(const Message& m);
+    // void recvMsg(const Message& m);
 
 };
 
