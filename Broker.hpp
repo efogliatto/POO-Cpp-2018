@@ -14,7 +14,6 @@ private:
     
     // Registro de clientes   
 
-    // lockedVar< std::vector<Client*> > clients;
     lockedVar< std::multiset<Client*> > clients;
     
 
@@ -25,10 +24,22 @@ private:
 
     // Registro de topicos retenidos
 
-    lockedVar< std::multiset<RetainedTopic*> > topics_cache;    
+    lockedVar< std::multiset<RetainedTopic*> > topics_cache;
+
+
+    // Max number of clients
+
+    const int maxClients;
 
 
 public:
+
+
+    // Constructor
+
+    Broker();
+    
+    Broker(const int& maxc);
 
 
     // Registro de cliente

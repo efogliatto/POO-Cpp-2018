@@ -8,6 +8,18 @@ using namespace std;
 
 
 
+
+// Constructor por defecto
+
+Broker::Broker() : maxClients(10) {}
+
+
+// Constructor con maximos clientes
+
+Broker::Broker(const int& maxc) : maxClients(maxc) {}
+
+
+
 // Registro de cliente en el broker
 
 BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
@@ -15,9 +27,17 @@ BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
 
     unique_access< multiset<Client*> > accessClient( clients );
 
-    Client* client = new Client(c, *this);
+    Client* client = nullptr;
+
+    if( (int)accessClient->size() <= maxClients ) {
+
+	client = new Client(c, *this);
     
-    accessClient->insert( client );
+	accessClient->insert( client );
+
+    }
+
+
     
     return client;
 
