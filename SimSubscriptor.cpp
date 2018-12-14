@@ -13,6 +13,8 @@ using namespace std;
 
 SimSubscriptor::SimSubscriptor(Broker& b) : SimClient(b) {}
 
+SimSubscriptor::SimSubscriptor(Broker& b, const string& name) : SimClient(b,name) {}
+
 
 void SimSubscriptor::runSim() {
 
@@ -21,73 +23,55 @@ void SimSubscriptor::runSim() {
     
     BrokerOpsIF* brops = broker.registerClient(this);
 
-    stringstream ss;
+    if( username == "undefined" ) {
+    
+	stringstream ss;
 
-    ss << this_thread::get_id();
+	ss << this_thread::get_id();
 
-    username = ss.str();    
+	username = ss.str();
+
+    }
 
     brops->sendMsg(  ConnectMsg( username, "pass" )  );
 
 
-
+    
     // Simulacion si la conexion es correcta
 
+    waitConnAck();
+
+    unique_access<ConnAckMsg::Status> stAccess( status );
+
+    if( *stAccess == ConnAckMsg::Status::CONNECTION_OK ) {
+
     
-    // Esperar connack
 
+	// Envio de mensaje de subscripcion
 
-    // Envio de mensaje de subscripcion
-
-    int sleep = 1000 + rand() / (RAND_MAX / 2001 + 1);
+	int sleep = 1000 + rand() / (RAND_MAX / 2001 + 1);
 	
-    this_thread::sleep_for( chrono::milliseconds(sleep) );   
+	this_thread::sleep_for( chrono::milliseconds(sleep) );   
     
-    SubscribeMsg m("Topico");
+	SubscribeMsg m("Topico");
 
-    brops->sendMsg(m);
+	brops->sendMsg(m);
 
 
 
-    this_thread::sleep_for( chrono::seconds(2) );
+	this_thread::sleep_for( chrono::seconds(2) );
 
-    UnsubscribeMsg um("Topico");
+	UnsubscribeMsg um("Topico");
     
-    brops->sendMsg(um);
+	brops->sendMsg(um);
 
 
-    this_thread::sleep_for( chrono::seconds(1) );
+	this_thread::sleep_for( chrono::seconds(1) );
     
-    brops->sendMsg( DisconnectMsg() );
+	brops->sendMsg( DisconnectMsg() );
     
 
+    }
+
+    
 }
-
-
-// void SimSubscriptor::recvMsg(const Message& m) {
-
-//     const Message::Type mtype = m.getType();
-
-//     const PublishMsg* pmsg;
-
-
-//     switch( mtype ) {
-
-
-//     case Message::Type::PUBLISH:
-
-//     	pmsg = dynamic_cast<const PublishMsg*>(&m);
-
-//     	cout << pmsg->getTopic() + "\n";
-
-//     	break;
-	    
-
-//     default:
-
-//     	break;
-
-	    
-//     }
-
-// }

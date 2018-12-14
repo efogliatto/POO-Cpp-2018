@@ -132,7 +132,7 @@ void Client::processConnect( const Message* msg ) {
     user = cmsg->user();
 
     cout << "Solicitud de conexion de usuario [" + user + "]\n";
-
+    
     broker.connReq( this );
 	    
 }

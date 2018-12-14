@@ -13,6 +13,8 @@ using namespace std;
 
 SimPublisher::SimPublisher(Broker& b) : SimClient(b) {}
 
+SimPublisher::SimPublisher(Broker& b, const string& name) : SimClient(b,name) {}
+
 
 void SimPublisher::runSim() {
 
@@ -21,21 +23,27 @@ void SimPublisher::runSim() {
     
     BrokerOpsIF* brops = broker.registerClient(this);
 
-    stringstream ss;
+    if( username == "undefined" ) {
+    
+	stringstream ss;
 
-    ss << this_thread::get_id();
+	ss << this_thread::get_id();
 
-    username = ss.str();
+	username = ss.str();
+
+    }
 
     brops->sendMsg(  ConnectMsg( username, "pass" )  );
 
-
-
+   
     // Simulacion si la conexion es correcta
 
-    if( status == ConnAckMsg::Status::CONNECTION_OK ) {
-    
+    waitConnAck();
 
+    unique_access<ConnAckMsg::Status> stAccess( status );
+
+    if( *stAccess == ConnAckMsg::Status::CONNECTION_OK ) {
+    
 
 	for( int i = 0 ; i < 5 ; ++i ) {
 
@@ -57,34 +65,3 @@ void SimPublisher::runSim() {
     
 
 }
-
-
-// void SimPublisher::recvMsg(const Message& m) {
-
-    
-//     const Message::Type mtype = m.getType();
-
-//     const PublishMsg* pmsg;
-
-
-//     switch( mtype ) {
-
-
-//     case Message::Type::PUBLISH:
-
-//     	pmsg = dynamic_cast<const PublishMsg*>(&m);
-
-//     	cout << pmsg->getTopic() + "\n";
-
-//     	break;
-	    
-
-//     default:
-
-//     	break;
-
-	    
-//     }
-	
-
-// }

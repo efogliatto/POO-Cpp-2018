@@ -23,11 +23,6 @@ protected:
     Broker& broker;
 
 
-    // Interfase para simulacion
-
-    virtual void runSim() = 0;
-
-
     // Nombre de usuario (usado para mensajes de recepcion)
 
     std::string username;
@@ -35,16 +30,37 @@ protected:
 
     // Estado de la conexion
 
-    ConnAckMsg::Status status;
+    lockedVar<ConnAckMsg::Status> status;
 
 
+    // Variable de condicion para esperar la confirmacion de conexion
+
+    std::condition_variable connection;
+
+
+
+    // Interfase para simulacion
+
+    virtual void runSim() = 0;
+
+
+    // Procesamiento de mensaje ConnAck
+
+    void proccessConnAck( const Message& m );
+    
+
+    
 public:
 
     SimClient(Broker& b);
 
+    SimClient(Broker& b, const std::string& name);
+
     void start();
 
     void recvMsg(const Message& m);
+
+    void waitConnAck();
 
 };
 

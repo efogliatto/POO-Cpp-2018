@@ -64,7 +64,7 @@ public:
 
     ConnAckMsg();
 
-    enum class Status { CONNECTION_OK, LOGIN_ERROR };
+    enum class Status { CONNECTION_OK, LOGIN_ERROR, UNDEFINED };
 
     virtual ConnAckMsg* clone() const;
 

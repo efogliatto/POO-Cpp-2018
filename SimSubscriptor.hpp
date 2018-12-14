@@ -14,6 +14,8 @@ private:
 public:
 
     SimSubscriptor(Broker& b);
+
+    SimSubscriptor(Broker& b, const std::string& name);
     
     // void recvMsg(const Message& m);
 

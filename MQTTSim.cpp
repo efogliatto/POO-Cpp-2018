@@ -29,7 +29,7 @@ int main( int argc, char **argv ) {
     std::vector<std::thread> tpub;    
 
     for( int i = 0 ; i < npub ; i++ )
-	publishers.push_back( new SimPublisher(broker) );
+	publishers.push_back( new SimPublisher(broker, "Pub_" + std::to_string(i)) );
 
     for( int i = 0 ; i < npub ; i++ )
     	tpub.push_back( std::thread(&SimClient::start, publishers[i]) );
@@ -45,7 +45,7 @@ int main( int argc, char **argv ) {
     std::vector<std::thread> tsub;    
 
     for( int i = 0 ; i < nsub ; i++ )
-	subscriptors.push_back( new SimSubscriptor(broker) );
+	subscriptors.push_back( new SimSubscriptor(broker, "Sub_" + std::to_string(i)) );
 
     for( int i = 0 ; i < nsub ; i++ )
     	tsub.push_back( std::thread(&SimClient::start, subscriptors[i]) );
