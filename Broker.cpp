@@ -1,5 +1,7 @@
 #include "Broker.hpp"
 
+#include "rndTime.hpp"
+
 #include <iostream>
 
 using namespace std;
@@ -10,11 +12,15 @@ using namespace std;
 
 BrokerOpsIF* Broker::registerClient( ClientOpsIF* c ) {
     
-    unique_access< vector<Client*> > accessClient( clients );
 
-    accessClient->push_back( new Client(c, *this) );
+    unique_access< multiset<Client*> > accessClient( clients );
+
+    Client* client = new Client(c, *this);
     
-    return accessClient->back();
+    accessClient->insert( client );
+    
+    return client;
+
     
 }
 
@@ -117,6 +123,28 @@ void Broker::updateRTopic( RetainedTopic* rt ) {
 
 
 
+// Remocion de subscripcion
+
+void Broker::removeRetainedTopic( RetainedTopic* rt ) {
+
+
+    // Acceso al registro de subscripciones a traves del accessor
+
+    unique_access< multiset<RetainedTopic*> > accessRT( topics_cache );
+
+    for( auto rsub : *accessRT ) {
+
+    	if( rt->owner == rsub->owner )
+	    accessRT->erase( rsub );
+
+    }    
+    
+
+}
+
+
+
+
 // Envio de topico a subscriptores
 
 void Broker::sendTopic( const TopicName& name, const TopicValue& val ) {
@@ -138,7 +166,8 @@ void Broker::sendTopic( const TopicName& name, const TopicValue& val ) {
 
     	}
 
-    }    
+    }
+    
 
 }
 
@@ -154,8 +183,45 @@ void Broker::connReq( Client* c ) {
 
     ConnAckMsg m;
 
-    m.setStatus( ConnAckMsg::Status::CONNECTION_OK );	   
+
+    // 20% de conexiones erroneas
+    
+    rndTime rnd(1,10);
+
+    if( rnd.time() <= 8 ) {
+	
+	m.setStatus( ConnAckMsg::Status::CONNECTION_OK );
+
+    }
+
+    else {
+
+	m.setStatus( ConnAckMsg::Status::LOGIN_ERROR );
+
+    }
+    
 
     (*cif)->recvMsg(m);	    
+
+}
+
+
+
+
+
+
+// Remocion de cliente
+
+void Broker::removeClient( Client* c ) {
+
+    unique_access< multiset<Client*> > accessClient( clients );
+
+    for( auto client : *accessClient ) {
+	
+    	if( client == c )
+    	    accessClient->erase(client);    
+
+    }
+
 
 }

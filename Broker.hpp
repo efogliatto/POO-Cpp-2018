@@ -14,7 +14,8 @@ private:
     
     // Registro de clientes   
 
-    lockedVar< std::vector<Client*> > clients;
+    // lockedVar< std::vector<Client*> > clients;
+    lockedVar< std::multiset<Client*> > clients;
     
 
     // Registro de subscripciones    
@@ -48,6 +49,11 @@ public:
     // Actualizacion de topico retenido
 
     void updateRTopic( RetainedTopic* rt );
+
+
+    // Remocion de subscripcion
+
+    void removeRetainedTopic( RetainedTopic* rt );    
     
 
     // Envio de topico a subscriptores
@@ -58,6 +64,11 @@ public:
     // Solicitud de conexion
 
     void connReq( Client* c );
+
+
+    // Remocion de cliente
+
+    void removeClient( Client* c );
 
     
 };

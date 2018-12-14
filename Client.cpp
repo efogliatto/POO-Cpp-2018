@@ -36,7 +36,12 @@ Client::~Client() {
     
     for( auto sub : subscriptions )
 	broker.removeSubscription( sub );
+ 
+    for( auto rt : topics )
+	broker.removeRetainedTopic( rt );   
     
+
+    // Join al thread encargado del dispatch de mensajes
     
     if( th.joinable() )
 	th.join();
@@ -45,6 +50,7 @@ Client::~Client() {
 
 
 
+// Dispach de mensajes
 
 void Client::dispatch() {
 
@@ -82,6 +88,8 @@ void Client::dispatch() {
 	    proccess = false;
 
 	    cout << "Desconexion de usuario [" << user << "]" << endl;
+
+	    processDisconnect(msg);
 	    
 	    break;
 
@@ -148,7 +156,16 @@ void Client::processDisconnect( const Message* msg ) {
     // Es necesario remover las subscripciones y retained topics que quedan en el broker
     
     for( auto sub : subscriptions )
-	broker.removeSubscription( sub );	    
+	broker.removeSubscription( sub );
+
+    for( auto rt : topics )
+	broker.removeRetainedTopic( rt );
+
+
+
+    // Pedido de desconexion al broker
+    
+    broker.removeClient( this );
     
 
 }

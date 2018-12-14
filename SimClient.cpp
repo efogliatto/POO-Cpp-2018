@@ -116,6 +116,12 @@ void SimClient::waitConnAck() {
 	
 	break;
 
+    case ConnAckMsg::Status::UNREG_CLIENT:
+
+	cout << "Error de conexion para usuario [" + username + "]. Usuario no registrado\n";
+	
+	break;	
+
     case ConnAckMsg::Status::UNDEFINED:
 
 	cout << "Tiempo máximo de espera superado para usuario [" + username + "]. Fallo de conexión\n";
