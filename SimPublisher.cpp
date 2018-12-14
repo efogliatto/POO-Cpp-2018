@@ -6,15 +6,23 @@
 
 #include <chrono>
 
+#include "TopicsList.hpp"
+
+#include "rndTime.hpp"
+
 using namespace std;
 
 
 
+// Constructores
 
 SimPublisher::SimPublisher(Broker& b) : SimClient(b) {}
 
 SimPublisher::SimPublisher(Broker& b, const string& name) : SimClient(b,name) {}
 
+
+
+// Simulacion de publicacion
 
 void SimPublisher::runSim() {
 
@@ -35,23 +43,37 @@ void SimPublisher::runSim() {
 
     brops->sendMsg(  ConnectMsg( username, "pass" )  );
 
-   
+
+    
     // Simulacion si la conexion es correcta
 
     waitConnAck();
 
     unique_access<ConnAckMsg::Status> stAccess( status );
 
+    
     if( *stAccess == ConnAckMsg::Status::CONNECTION_OK ) {
+
+
+	// Topico de publicacion aleatorio
+	
+	TopicsList topics;
+
+	string tp = topics.randomTopic();
+
+
+
+	// Tiempo de demora entre publicaciones aleatorio: entre 500 y 2000 milisegundos
+
+	rndTime rt(500, 2000);
+	
     
 
 	for( int i = 0 ; i < 5 ; ++i ) {
+	    
+	    this_thread::sleep_for(  chrono::milliseconds( rt.time() )  );
 
-	    int sleep = 500 + rand() / (RAND_MAX / 1001 + 1);
-	
-	    this_thread::sleep_for( chrono::milliseconds(sleep) );
-
-	    PublishMsg m("Topico", "Valor");
+	    PublishMsg m(tp, "Valor");
 
 	    brops->sendMsg(m);
 
@@ -59,7 +81,6 @@ void SimPublisher::runSim() {
 
     
 	brops->sendMsg( DisconnectMsg() );
-
 
     }
     

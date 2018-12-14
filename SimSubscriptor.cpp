@@ -6,15 +6,23 @@
 
 #include <chrono>
 
+#include "TopicsList.hpp"
+
+#include "rndTime.hpp"
+
+
 using namespace std;
 
 
-
+// Constructores
 
 SimSubscriptor::SimSubscriptor(Broker& b) : SimClient(b) {}
 
 SimSubscriptor::SimSubscriptor(Broker& b, const string& name) : SimClient(b,name) {}
 
+
+
+// Simulacion de subscripcion
 
 void SimSubscriptor::runSim() {
 
@@ -42,29 +50,44 @@ void SimSubscriptor::runSim() {
     waitConnAck();
 
     unique_access<ConnAckMsg::Status> stAccess( status );
+    
 
     if( *stAccess == ConnAckMsg::Status::CONNECTION_OK ) {
 
-    
 
-	// Envio de mensaje de subscripcion
-
-	int sleep = 1000 + rand() / (RAND_MAX / 2001 + 1);
 	
-	this_thread::sleep_for( chrono::milliseconds(sleep) );   
+	// Subscripcion aleatoria a un topico	
+
+	rndTime tsub(500,1500);
+	
+	this_thread::sleep_for( chrono::milliseconds(tsub.time()) );
+	
+
+	TopicsList topics;
+
+	string tp = topics.randomTopic();
+	
     
-	SubscribeMsg m("Topico");
+	SubscribeMsg m(tp);
 
 	brops->sendMsg(m);
 
 
 
-	this_thread::sleep_for( chrono::seconds(2) );
 
-	UnsubscribeMsg um("Topico");
+	// Espera y desubscripcion
+
+	rndTime tdsub(2,4);
+	
+	this_thread::sleep_for( chrono::seconds( tdsub.time() ) );
+
+	UnsubscribeMsg um(tp);
     
 	brops->sendMsg(um);
 
+
+	
+	// Desconexion
 
 	this_thread::sleep_for( chrono::seconds(1) );
     
