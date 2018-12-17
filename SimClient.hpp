@@ -32,13 +32,7 @@ protected:
 
     lockedVar<ConnAckMsg::Status> status;
 
-
-    // Variable de condicion para esperar la confirmacion de conexion
-
-    std::condition_variable connection;
-
-
-
+    
     // Interfase para simulacion
 
     virtual void runSim() = 0;
@@ -52,13 +46,26 @@ protected:
     
 public:
 
+
+    // Constructores
+
     SimClient(Broker& b);
 
     SimClient(Broker& b, const std::string& name);
 
+
+    // Comienzo de simulacion
+    
     void start();
 
+
+    // Recepcion de mensajes. Interfase comun para SimPublisher y SimSubscriber
+
     void recvMsg(const Message& m);
+
+
+    // Tiempo de espera para conexion.
+    // Espera un tiempo fijo por la conexion. Si el estado sigue siendo UNDEFINED despues de ese tiempo, de mensaje de error
 
     void waitConnAck();
 

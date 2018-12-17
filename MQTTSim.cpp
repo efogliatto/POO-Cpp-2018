@@ -2,7 +2,7 @@
 
 #include "SimPublisher.hpp"
 
-#include "SimSubscriptor.hpp"
+#include "SimSubscriber.hpp"
 
 #include "rndTime.hpp"
 
@@ -53,7 +53,7 @@ int main( int argc, char **argv ) {
 
     	else {
 
-    	    Clients.push_back( new SimSubscriptor(broker, "Sub_" + std::to_string(nsub)) );
+    	    Clients.push_back( new SimSubscriber(broker, "Sub_" + std::to_string(nsub)) );
 
     	    nsub++;
 

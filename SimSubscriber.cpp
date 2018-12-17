@@ -1,4 +1,4 @@
-#include "SimSubscriptor.hpp"
+#include "SimSubscriber.hpp"
 
 #include <iostream>
 
@@ -16,15 +16,15 @@ using namespace std;
 
 // Constructores
 
-SimSubscriptor::SimSubscriptor(Broker& b) : SimClient(b) {}
+SimSubscriber::SimSubscriber(Broker& b) : SimClient(b) {}
 
-SimSubscriptor::SimSubscriptor(Broker& b, const string& name) : SimClient(b,name) {}
+SimSubscriber::SimSubscriber(Broker& b, const string& name) : SimClient(b,name) {}
 
 
 
 // Simulacion de subscripcion
 
-void SimSubscriptor::runSim() {
+void SimSubscriber::runSim() {
 
 
     // Registro en el broker y solicitud de conexion

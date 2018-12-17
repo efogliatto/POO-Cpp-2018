@@ -5,7 +5,7 @@
 // Cola FIFO "thread-safe" de tamanio maximo fijo
 
 
-#include <memory>
+// #include <memory>
 
 #include <mutex>
 
@@ -118,8 +118,6 @@ Queue<T,N>::Queue(const Queue& q) {
 template<class T, size_t N>
 const bool Queue<T,N>::empty() const {
 
-    // std::lock_guard<std::mutex> lg(m);
-
     return (front == -1) ? true : false;
 
 }
@@ -141,8 +139,6 @@ const bool Queue<T,N>::isEmpty() const {
 
 template<class T, size_t N>
 const bool Queue<T,N>::full() const {
-
-    // std::lock_guard<std::mutex> lg(m);
 
     bool isFull(false);
 
@@ -190,7 +186,6 @@ void Queue<T,N>::put(const T& val) {
     rear = (rear + 1) % N;
 
     data[rear] = val;
-    // std::cout << "Inserting value " << val << std::endl;
 
     
 
@@ -206,39 +201,6 @@ void Queue<T,N>::put(const T& val) {
 template<class T, size_t N>
 void Queue<T,N>::get(T* val) {
 
-    // std::lock_guard<std::mutex> lg(m);
-
-    // if( !empty() ) {
-
-    // 	*val = data[front];
-
-    // 	if(front == rear){
-		
-    // 	    front = -1;
-		
-    // 	    rear = -1;
-		
-    // 	}
-	    
-    // 	else {
-		
-    // 	    front = (front+1) % N;
-		
-    // 	}
-
-    // 	full_cond.notify_one();
-
-    // }
-
-    // else {
-
-    // 	val = new T;
-
-    // }
-
-
-
-    
 
     std::unique_lock<std::mutex> lg(m);
     
@@ -265,7 +227,6 @@ void Queue<T,N>::get(T* val) {
     }
 
 
-    // std::cout << "Extracting value " << *val << std::endl;
 
     // Habilita la posicion de un nuevo elemento (por si la cola estaba llena)
     
