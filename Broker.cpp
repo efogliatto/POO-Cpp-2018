@@ -55,7 +55,8 @@ void Broker::addSubscription( Subscription* sub ) {
     // Acceso al registro de subscripciones a traves del accessor
     // Cuidado: no vuelve a buscar. Queda a cargo de Client
 
-    unique_access< multiset<Subscription*> > accessSub(subs_cache);
+
+    unique_access< multiset<Subscription*> > accessSub( subs_cache );
 
     accessSub->insert( sub );
 
@@ -64,19 +65,15 @@ void Broker::addSubscription( Subscription* sub ) {
     // Acceso al registro de retained topics para ver si esta disponible
 
     unique_access< multiset<RetainedTopic*> > accessTopic(topics_cache);
-
+   
     for(auto rtopics : *accessTopic) {
 
     	if( rtopics->topic == sub->topic ) {
 
-
-	    unique_access< ClientOpsIF* > cif = sub->owner->CIF();
+    	    unique_access< ClientOpsIF* > cif = sub->owner->CIF();
 	    
-	    PublishMsg m( "Enviando mensaje de topico [" + rtopics->topic + "] a subscriptor", "" );
-
-	    (*cif)->recvMsg(m);	 
+    	    (*cif)->recvMsg(  PublishMsg( "Enviando mensaje de topico [" + rtopics->topic + "] a subscriptor", rtopics->value )  );
 	    
-
     	}
 
     }    
@@ -181,10 +178,8 @@ void Broker::sendTopic( const TopicName& name, const TopicValue& val ) {
     	if( sub->topic == name ) {
 
 	    unique_access< ClientOpsIF* > cif = sub->owner->CIF();
-	    
-	    PublishMsg m( "Enviando mensaje de topico [" + name + "] a subscriptor", val );
 
-	    (*cif)->recvMsg(m);	    
+	    (*cif)->recvMsg(  PublishMsg( "Enviando mensaje de topico [" + name + "] a subscriptor", val )   );
 
     	}
 
