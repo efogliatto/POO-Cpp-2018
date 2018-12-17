@@ -31,70 +31,93 @@ void SimSubscriptor::runSim() {
     
     BrokerOpsIF* brops = broker.registerClient(this);
 
-    if( username == "undefined" ) {
+
+    if( brops != nullptr ) {
+	
+
+	if( username == "undefined" ) {
     
-	stringstream ss;
+	    stringstream ss;
 
-	ss << this_thread::get_id();
+	    ss << this_thread::get_id();
 
-	username = ss.str();
+	    username = ss.str();
+
+	}
+
+	brops->sendMsg(  ConnectMsg( username, "pass" )  );
+
+
+    
+	// Simulacion si la conexion es correcta
+
+	waitConnAck();
+
+	unique_access<ConnAckMsg::Status> stAccess( status );
+    
+
+	if( *stAccess == ConnAckMsg::Status::CONNECTION_OK ) {
+
+
+	
+	    // Subscripcion aleatoria a 2 topicos
+
+	    rndTime tsub(500,1500);
+	    // rndTime tsub(50,150);
+	
+	    this_thread::sleep_for( chrono::milliseconds(tsub.time()) );
+	
+
+	    TopicsList topics;
+	    
+	    vector<string> subTopics = { topics.randomTopic(), topics.randomTopic() };
+	    
+	    for(auto tp : subTopics) {
+
+		SubscribeMsg m(tp);
+
+		brops->sendMsg(m);
+
+	    }
+	    
+	    
+
+	    // Espera y desubscripcion
+
+	    rndTime tdsub(4000,8000);
+	    // rndTime tdsub(400,800);
+	    
+	
+	    this_thread::sleep_for( chrono::milliseconds( tdsub.time() ) );
+
+	    for(auto tp : subTopics) {
+
+		UnsubscribeMsg m(tp);
+
+		brops->sendMsg(m);
+
+	    }	   
+
+	    
+	
+	    // Desconexion
+
+	    this_thread::sleep_for( chrono::milliseconds(1000) );
+    
+	    brops->sendMsg( DisconnectMsg() );
+    
+
+	}
+
 
     }
 
-    brops->sendMsg(  ConnectMsg( username, "pass" )  );
 
+    else {
 
-    
-    // Simulacion si la conexion es correcta
-
-    waitConnAck();
-
-    unique_access<ConnAckMsg::Status> stAccess( status );
-    
-
-    if( *stAccess == ConnAckMsg::Status::CONNECTION_OK ) {
-
-
+	cout << "Error de registro del usuario [" + username + "]\n";
 	
-	// Subscripcion aleatoria a un topico	
-
-	rndTime tsub(500,1500);
-	
-	this_thread::sleep_for( chrono::milliseconds(tsub.time()) );
-	
-
-	TopicsList topics;
-
-	string tp = topics.randomTopic();
-	
-    
-	SubscribeMsg m(tp);
-
-	brops->sendMsg(m);
-
-
-
-
-	// Espera y desubscripcion
-
-	rndTime tdsub(2,4);
-	
-	this_thread::sleep_for( chrono::seconds( tdsub.time() ) );
-
-	UnsubscribeMsg um(tp);
-    
-	brops->sendMsg(um);
-
-
-	
-	// Desconexion
-
-	this_thread::sleep_for( chrono::seconds(1) );
-    
-	brops->sendMsg( DisconnectMsg() );
-    
-
-    }
+    }    
 
     
 }

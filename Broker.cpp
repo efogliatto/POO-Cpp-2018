@@ -11,7 +11,7 @@ using namespace std;
 
 // Constructor por defecto
 
-Broker::Broker() : maxClients(10) {}
+Broker::Broker() : maxClients(100) {}
 
 
 // Constructor con maximos clientes
@@ -53,6 +53,7 @@ void Broker::addSubscription( Subscription* sub ) {
 
 
     // Acceso al registro de subscripciones a traves del accessor
+    // Cuidado: no vuelve a buscar. Queda a cargo de Client
 
     unique_access< multiset<Subscription*> > accessSub(subs_cache);
 
@@ -180,7 +181,7 @@ void Broker::sendTopic( const TopicName& name, const TopicValue& val ) {
 
 	    unique_access< ClientOpsIF* > cif = sub->owner->CIF();
 	    
-	    PublishMsg m( "Enviando mensaje de topico [" + name + "] a subscriptor", "" );
+	    PublishMsg m( "Enviando mensaje de topico [" + name + "] a subscriptor", val );
 
 	    (*cif)->recvMsg(m);	    
 

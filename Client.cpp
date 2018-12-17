@@ -213,6 +213,7 @@ void Client::processSubscribe( const Message* msg ) {
 // Procesamiento de mensajes tipo UNSUBSCRIBE
 
 void Client::processUnsubscribe( const Message* msg ) {
+    
 
     const UnsubscribeMsg* umsg = dynamic_cast<const UnsubscribeMsg *>(msg);
 
