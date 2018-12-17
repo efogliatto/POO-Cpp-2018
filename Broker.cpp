@@ -144,7 +144,8 @@ void Broker::updateRTopic( RetainedTopic* rt ) {
 
 
 
-// Remocion de subscripcion
+// Remocion de topico retenido
+// Es por si el ultimo valor asociado a este topico viene de un subscriptor que ya no esta
 
 void Broker::removeRetainedTopic( RetainedTopic* rt ) {
 
